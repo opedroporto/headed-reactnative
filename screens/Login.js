@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { Image, ImageBackground, StyleSheet, Text, TextInput, View, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
+import { Image, ImageBackground, StyleSheet, Text, TextInput, View, TouchableOpacity, KeyboardAvoidingView} from 'react-native'
 import { Icon } from 'react-native-elements'
-
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { addUser } from '../redux/actions'
 
 import { login, fetchUserData } from '../backendApi'
@@ -61,6 +60,7 @@ class Login extends React.Component {
             >
                 <View style={styles.container}>
                     <View style={styles.logoContainer}>
+                        {/* <VectorImage source={require('../assets/headed_logo.svg')} />; */}
                         {/* <Text style={styles.title}>Headed</Text> */}
                         <Image style={styles.logo} source={require('../assets/headed_logo.png')} resizeMode='cover'/>
                     </View>
@@ -108,9 +108,31 @@ class Login extends React.Component {
                             <Text style={styles.loginText}>Login</Text>
                         </TouchableOpacity>
                         <View style={styles.bottomSection}>
-                            <Text>
-                                Don't have an account yet?  <Text style={styles.createAccountText}onPress={() => this.props.navigation.push('SignupScreen')}>Create one</Text>
-                            </Text>
+                            <View style={styles.textContainer}>
+                                <Text>
+                                    Don't have an account yet?
+                                    <Text
+                                        style={styles.clickableText}
+                                        onPress={() => this.props.navigation.navigate('SignupScreen')}
+                                    >  Create one </Text>
+                                </Text>
+                            </View>
+                            <View style={styles.textContainer}>
+                                <Text>
+                                    <Text
+                                        style={styles.secondaryText}
+                                        onPress={() => {
+                                            this.props.dispatch(addUser(null))
+                                            this.props.navigation.reset({
+                                                index: 0,
+                                                routes: [{ name: 'MainNavigator' }],
+                                              });
+                                        }}
+                                    >
+                                        Continue as guest
+                                    </Text>
+                                </Text>
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -134,7 +156,7 @@ const styles = StyleSheet.create({
     whiteContainer: {
         justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 0.85)',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
         width: '100%',
         height: '60%',
         padding: 10,
@@ -214,9 +236,16 @@ const styles = StyleSheet.create({
     },
     bottomSection: {
         flex: 1,
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
+        alignItems: 'center'
     },
-    createAccountText: {
+    clickableText: {
         color: '#66f'
+    },
+    secondaryText: {
+        color: '#888'
+    },
+    textContainer: {
+        margin: 5
     }
 })

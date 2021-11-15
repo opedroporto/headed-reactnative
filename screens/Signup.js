@@ -103,7 +103,7 @@ export default class Company extends React.Component {
                         </TouchableOpacity>
                         <View style={styles.bottomSection}>
                             <Text>
-                                Already have an account?  <Text style={styles.loginAccountText} onPress={() => this.props.navigation.push('LoginScreen')}>Login</Text>
+                                Already have an account?  <Text style={styles.clickableText} onPress={() => this.props.navigation.push('LoginScreen')}>Login</Text>
                             </Text>
                         </View>
                     </View>
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     whiteContainer: {
         justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
         width: '100%',
         height: '90%',
         padding: 10,
@@ -187,9 +187,10 @@ const styles = StyleSheet.create({
     },
     bottomSection: {
         flex: 1,
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
+        alignItems: 'center'
     },
-    loginAccountText: {
+    clickableText: {
         color: '#66f'
     }
 })

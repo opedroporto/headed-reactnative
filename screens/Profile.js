@@ -1,7 +1,11 @@
 import * as React from 'react'
-import { Image, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { Icon } from 'react-native-elements'
+import { Button } from 'react-native-elements/dist/buttons/Button'
+
+import { addUser } from '../redux/actions'
 import { connect } from 'react-redux'
+
 
 class Profile extends React.Component {
     render() {  
@@ -24,6 +28,19 @@ class Profile extends React.Component {
                         <Text style={styles.bold}>E-mail: </Text>
                         <Text>{ this.props.user['email'] }</Text>
                     </Text>
+                    <View style={styles.signoutContainer}>
+                        <Button
+                            title='Sign out' 
+                            color='#f00'
+                            onPress={() => {
+                                this.props.dispatch(addUser(null))
+                                this.props.navigation.reset({
+                                    index: 0,
+                                    routes: [{ name: 'LoginNavigator' }],
+                                  });                    
+                            }}
+                        />
+                    </View>
                 </View>
             </View>
         )
@@ -66,5 +83,9 @@ const styles = StyleSheet.create({
     },
     bold: {
         fontWeight: 'bold'
+    },
+    signoutContainer: {
+        flex: 1,
+        justifyContent: 'flex-end'
     }
 })

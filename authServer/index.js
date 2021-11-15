@@ -1,6 +1,8 @@
 import Express from 'express'
 import db from './db.js'
 import bodyParser from 'body-parser'
+import bcrypt from 'bcrypt'
+
 import { validateEmail, validateUsernameLength, validateUsernameASCII, validatePassword } from './helpers.js'
 
 const url = 'mongodb://localhost:27017'
@@ -37,15 +39,22 @@ app.post('/login', (req, res) => {
     if (!validateUsernameASCII(username)) return res.status(400).send('Username characters are invalid')
     if (!validatePassword(password)) return res.status(400).send('Password has to be between 8 and 128 characters long')
 
+    // other verifications
     db.connect(url, 
         {useUnifiedTopology: true},
         (error, connection) => {
-            if (error) return console.log('Database error: ', error)
+            if (error) return console.log(error)
             connection.db('app').collection('users').findOne({'username': username}, function(err, result) {
+                // user exists
                 if (!result) return res.status(403).send('Invalid credentials')
-                if (!(result.username == username && result.password == password))return res.status(403).send('Invalid credentials')
-                console.log(`User ${username} logged in`)
-                return res.status(200).send(result)
+                // compare username
+                if (!(result.username == username)) return res.status(403).send('Invalid credentials')
+                // compare passwords
+                bcrypt.compare(password, result.password, function(err, match) {
+                    if (!match) return res.status(403).send('Invalid credentials')
+                    console.log(`User ${username} logged in`)
+                    return res.status(200).send(result)
+                })
             })
         })
 })
@@ -71,7 +80,6 @@ app.post('/addUser', (req, res) => {
                 if (error) return console.log(error)
                 // email must be unique
                 connection.db('app').collection('users').findOne({'email': email}, function(err, result) {
-                    console.log(result)
                     if (result) {
                         return res.status(403).send('E-mail already exists')
                     } else {
@@ -80,11 +88,18 @@ app.post('/addUser', (req, res) => {
                             if (result) {
                                 return res.status(403).send('Username already exists')
                             } else {
-                                // add user
-                                connection.db('app').collection('users').insertOne({
-                                    'username': username,
-                                    'password': password,
-                                    'email': email
+                                // add user (with hashed password)
+                                let saltRounds = 10
+                                bcrypt.genSalt(saltRounds, function(err, salt) {
+                                    bcrypt.hash(password, salt, function(error, hash) {
+                                        if (error) return console.log(error)
+                                        console.log('Hash: ', hash)
+                                        connection.db('app').collection('users').insertOne({
+                                            'username': username,
+                                            'password': hash,
+                                            'email': email
+                                        })
+                                    })
                                 })
                                 console.log('New user added: ', username)
                                 return res.status(200).send('New user added')
