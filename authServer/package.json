@@ -1,0 +1,17 @@
+{
+  "name": "authserver",
+  "version": "1.0.0",
+  "description": "Simple auth server for a demo",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index"
+  },
+  "author": "Jordan Hayashi",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.17.1",
+    "mongodb": "^4.1.4"
+  }
+}
