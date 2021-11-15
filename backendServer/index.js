@@ -11,22 +11,6 @@ const app = Express()
 const PORT = process.env.PORT || 8000
 app.use(bodyParser.json())
 
-app.post('/fetchUserData', (req, res) => {
-    const {username} = req.body
-
-    if (!username) return res.status(400).send('Missing username')
-
-    db.connect(url, 
-        {useUnifiedTopology: true},
-        (error, connection) => {
-            if (error) return console.log(error)
-            connection.db('app').collection('users').findOne({'username': username}, function(err, result) {
-                if (!result) return res.status(404).send('User not found')
-                return res.status(200).send(result)
-            })
-        })
-})
-
 app.post('/login', (req, res) => {
     const {username, password} = req.body
 
@@ -109,6 +93,34 @@ app.post('/addUser', (req, res) => {
                 })
                 
             })
+})
+
+app.post('/fetchUserData', (req, res) => {
+    const {username} = req.body
+
+    if (!username) return res.status(400).send('Missing username')
+
+    db.connect(url, 
+        {useUnifiedTopology: true},
+        (error, connection) => {
+            if (error) return console.log(error)
+            connection.db('app').collection('users').findOne({'username': username}, function(err, result) {
+                if (!result) return res.status(404).send('User not found')
+                return res.status(200).send(result)
+            })
+        })
+})
+
+app.post('/fetchEntriesData', (req, res) => {
+    db.connect(url,
+        {useUnifiedTopology: true},
+        (error, connection) => {
+            if (error) return console.log(error)
+            connection.db('app').collection('entries').find().toArray(function(err, result) {
+                if (!result) return res.status(404).send('Data not found')
+                return res.status(200).send(result)
+            })
+        })
 })
   
 // catch 404

@@ -6,12 +6,12 @@ import {UPDATE_ENTRY, UPDATE_USER} from './actions'
 const addEntryReducer = (state = [], action) => {
     switch (action.type) {
         case UPDATE_ENTRY:
-            return [...state, action.payload]
+            return action.payload
         default:
             return state
     }
 }
-const addUser = (state = [], action) => {
+const addUserReducer = (state = [], action) => {
     switch (action.type) {
         case UPDATE_USER:
             return action.payload
@@ -22,5 +22,5 @@ const addUser = (state = [], action) => {
 
 export default combineReducers({
 	entries: addEntryReducer,
-    user: addUser
+    user: addUserReducer
 })

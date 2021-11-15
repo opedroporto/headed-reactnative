@@ -1,9 +1,16 @@
 import * as React from 'react'
 import {Dimensions, Image, Text, StyleSheet, View, SectionList, TouchableOpacity} from 'react-native'
+import { fetchEntriesData } from '../backendApi.js'
 
+import { addEntry } from '../redux/actions'
 import {connect} from 'react-redux'
 
 class Home extends React.Component {
+
+    componentDidMount = async() => {
+        let entries = await fetchEntriesData()
+        this.props.dispatch(addEntry(entries))
+    }
 
     renderItem = (obj) => {
         let numberOfLines = Math.floor(Dimensions.get('window').height / 325)
@@ -48,12 +55,14 @@ export default connect(mapStateToProps)(Home)
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#fcfcfc'
+        flex: 1
     },
     card: {
         flex: 1,
         backgroundColor: '#db2745',
+        borderBottomWidth: 1,
+        borderBottomColor: '#ea8192',
+        height: 80,
     },
     cardRow: {
         height: 80,
@@ -61,7 +70,8 @@ const styles = StyleSheet.create({
     },
     mainInfoContainer: {
         flex: 1,
-        paddingHorizontal: 6
+        paddingHorizontal: 6,
+        paddingBottom: 4
     },
     image: {
         width: 80,

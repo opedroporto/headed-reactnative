@@ -60,7 +60,6 @@ class Login extends React.Component {
             >
                 <View style={styles.container}>
                     <View style={styles.logoContainer}>
-                        {/* <VectorImage source={require('../assets/headed_logo.svg')} />; */}
                         {/* <Text style={styles.title}>Headed</Text> */}
                         <Image style={styles.logo} source={require('../assets/headed_logo.png')} resizeMode='cover'/>
                     </View>
@@ -161,8 +160,8 @@ const styles = StyleSheet.create({
         height: '60%',
         padding: 10,
         paddingBottom: 25,
-        borderTopStartRadius: 60,
-        borderTopEndRadius: 60
+        borderTopStartRadius: 50,
+        borderTopEndRadius: 50
     },
     inputContainer: {
         justifyContent: 'flex-start',
