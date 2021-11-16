@@ -28,7 +28,18 @@ class Profile extends React.Component {
                         <Text style={styles.bold}>E-mail: </Text>
                         <Text>{ this.props.user['email'] }</Text>
                     </Text>
-                    <View style={styles.signoutContainer}>
+                    <View style={styles.bottomContainer}>
+                        <Button
+                            title='Edit profile' 
+                            color='#f00'
+                            onPress={() => {
+                                this.props.dispatch(addUser(null))
+                                this.props.navigation.reset({
+                                    index: 0,
+                                    routes: [{ name: 'LoginNavigator' }],
+                                  });                    
+                            }}
+                        />
                         <Button
                             title='Sign out' 
                             color='#f00'
@@ -84,7 +95,7 @@ const styles = StyleSheet.create({
     bold: {
         fontWeight: 'bold'
     },
-    signoutContainer: {
+    bottomContainer: {
         flex: 1,
         justifyContent: 'flex-end'
     }

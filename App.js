@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler'
 import React from 'react';
-import { StatusBar, LinearGradient } from 'react-native';
+import { StatusBar } from 'react-native';
 
 import { Provider } from 'react-redux'
 import store from './redux/store'

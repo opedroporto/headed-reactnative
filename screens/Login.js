@@ -22,10 +22,12 @@ class Login extends React.Component {
         try {
             
             // login attempt
-            await login(this.state.username,  this.state.password)
+            const token = await login(this.state.username,  this.state.password)
 
             // add user from database to local storage
-            const user = await fetchUserData(this.state.username)
+            const user = await fetchUserData(token, this.state.username)
+            
+            user.token = token
             this.props.dispatch(addUser(user))
 
             // navigate to home
@@ -141,7 +143,7 @@ class Login extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    user: state.userusername
+    user: state.user
 })
 
 export default connect(mapStateToProps)(Login)

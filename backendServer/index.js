@@ -2,6 +2,9 @@ import Express from 'express'
 import db from './db.js'
 import bodyParser from 'body-parser'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+dotenv.config()
 
 import { validateEmail, validateUsernameLength, validateUsernameASCII, validatePassword } from './helpers.js'
 
@@ -10,6 +13,18 @@ const url = 'mongodb://localhost:27017'
 const app = Express()
 const PORT = process.env.PORT || 8000
 app.use(bodyParser.json())
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    if (token == null) return res.status(401).send('Missing token')
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if (err) return res.status(403).send('Invalid token')
+        req.user = user
+        next()
+    })
+}
 
 app.post('/login', (req, res) => {
     const {username, password} = req.body
@@ -36,8 +51,12 @@ app.post('/login', (req, res) => {
                 // compare passwords
                 bcrypt.compare(password, result.password, function(err, match) {
                     if (!match) return res.status(403).send('Invalid credentials')
+
+                    // valid: log user
+                    const acessToken = jwt.sign(username, process.env.ACCESS_TOKEN_SECRET)
+
                     console.log(`User ${username} logged in`)
-                    return res.status(200).send(result)
+                    return res.status(200).json(acessToken)
                 })
             })
         })
@@ -77,7 +96,6 @@ app.post('/addUser', (req, res) => {
                                 bcrypt.genSalt(saltRounds, function(err, salt) {
                                     bcrypt.hash(password, salt, function(error, hash) {
                                         if (error) return console.log(error)
-                                        console.log('Hash: ', hash)
                                         connection.db('app').collection('users').insertOne({
                                             'username': username,
                                             'password': hash,
@@ -95,32 +113,50 @@ app.post('/addUser', (req, res) => {
             })
 })
 
-app.post('/fetchUserData', (req, res) => {
+app.post('/fetchUserData', authenticateToken, (req, res) => {
     const {username} = req.body
 
     if (!username) return res.status(400).send('Missing username')
+    if (username !== req.user ) return res.status(400).send('Invalid credentials')
 
     db.connect(url, 
         {useUnifiedTopology: true},
         (error, connection) => {
             if (error) return console.log(error)
-            connection.db('app').collection('users').findOne({'username': username}, function(err, result) {
+            connection.db('app').collection('users').findOne({'username': req.user}, function(err, result) {
                 if (!result) return res.status(404).send('User not found')
-                return res.status(200).send(result)
+                return res.status(200).json(result)
             })
         })
 })
 
 app.post('/fetchEntriesData', (req, res) => {
-    db.connect(url,
-        {useUnifiedTopology: true},
-        (error, connection) => {
-            if (error) return console.log(error)
-            connection.db('app').collection('entries').find().toArray(function(err, result) {
-                if (!result) return res.status(404).send('Data not found')
-                return res.status(200).send(result)
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+
+    // guest
+    if (!token) {
+        db.connect(url,
+            {useUnifiedTopology: true},
+            (error, connection) => {
+                if (error) return console.log(error)
+                connection.db('app').collection('entries').find().toArray(function(err, result) {
+                    if (!result) return res.status(404).send('Data not found')
+                    return res.status(200).json(result)
+                })
             })
-        })
+    // user
+    } else (
+        db.connect(url,
+            {useUnifiedTopology: true},
+            (error, connection) => {
+                if (error) return console.log(error)
+                connection.db('app').collection('entries').find().toArray(function(err, result) {
+                    if (!result) return res.status(404).send('Data not found')
+                    return res.status(200).json(result)
+                })
+            })
+    )
 })
   
 // catch 404

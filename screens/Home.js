@@ -8,7 +8,7 @@ import {connect} from 'react-redux'
 class Home extends React.Component {
 
     componentDidMount = async() => {
-        let entries = await fetchEntriesData()
+        let entries = await fetchEntriesData(this.props.user.token || null)
         this.props.dispatch(addEntry(entries))
     }
 
@@ -48,6 +48,7 @@ class Home extends React.Component {
 }
 
 const mapStateToProps = state => ({
+    user: state.user,
     entries: state.entries
 })
 

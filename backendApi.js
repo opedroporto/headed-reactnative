@@ -6,9 +6,11 @@ export const login = async (username, password) => {
         },
         body: JSON.stringify({username, password})
     })
-        
+    
+    
     if(response.ok) {
-        return true
+        const result = await response.json()
+        return result
     }
 
     const errMessage = await response.text()
@@ -32,10 +34,11 @@ export const signup = async (email, username, password) => {
     throw new Error(errMessage)
 }
 
-export const fetchUserData = async (username) => {
+export const fetchUserData = async (token, username) => {
     const response = await fetch('http://192.168.15.11:8000/fetchUserData', {
         method: 'POST',
         headers: {
+            'Authorization': `Bearer ${token}`,
             'Content-type': 'application/json'
         },
         body: JSON.stringify({'username': username})
@@ -51,11 +54,11 @@ export const fetchUserData = async (username) => {
     throw new Error(errMessage)
 }
 
-
-export const fetchEntriesData = async() => {
+export const fetchEntriesData = async (token) => {
     const response = await fetch('http://192.168.15.11:8000/fetchEntriesData', {
         method: 'POST',
         headers: {
+            'Authorization': `Bearer ${token}`,
             'Content-type': 'application/json'
         }
     })
