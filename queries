@@ -1,0 +1,19 @@
+db.comments.insertMany(
+    [
+        {
+            "user": ObjectId("61930ad2a4a2aa5efe59b0d3"),
+            "messageContent": "Very good!",
+            "company": ObjectId("6192dcfc3a4e67db584ec0c2")
+        },
+        {
+            "user": ObjectId("6192dd0e3a4e67db584ec0c3"),
+            "messageContent": "Great store",
+            "company": ObjectId("6192dcfc3a4e67db584ec0c2")
+        }
+    ]
+)
+
+db.comments.aggregate([{$match: {"messageContent": "Very good!"}}, {$lookup: {from: "entries", localField: "company", foreignField: "_id", as: "entries" }}]).pretty()
+db.entries.aggregate([{$match: {"name": "Zax"s"}}, {$lookup: {from: "comments", localField: "comments", foreignField: "_id", as: "comments" }}]).pretty()
+
+db.comments.findOneAndUpdate({'messageContent': 'Great Store'}, {$set: {'company': ObjectId('61952203b03337705759aa04')}}).pretty()

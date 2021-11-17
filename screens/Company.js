@@ -1,12 +1,30 @@
 import * as React from 'react'
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { connect } from 'react-redux'
 
-export default class Company extends React.Component {
+import { fetchEntrieComments } from '../backendApi'
+
+class Company extends React.Component {
     state = {
-        company: this.props.route.params.company
+        company: this.props.route.params.company,
+        comments: []
     }
 
-    render() {  
+    toggleCommentSection = async () => {
+        const comments = await fetchEntrieComments(this.props.user.accessToken, this.state.company._id)
+        this.setState({ comments })
+    }
+
+    renderCommentItem = (obj) => {
+        console.log(obj)
+        return (
+            <React.Fragment>
+                <Text>{ obj.item.messageContent }</Text>
+            </React.Fragment>
+        )
+    }
+
+    render() {
         return (
             <View style={styles.container}>
                 <Image style={styles.image} source={{'uri': this.state.company.image}} />
@@ -15,13 +33,28 @@ export default class Company extends React.Component {
                     <Text style={styles.descriptionTitle}>Description</Text>
                     <Text style={styles.description}>{ this.state.company.description }</Text>
                 </View>
-                {/* <TouchableOpacity style={styles.commentSection}>
-                    <Text style={styles.commentSectionTitle}>Comments</Text>                
-                </TouchableOpacity> */}
+                <View style={styles.commentSection}>
+                    <TouchableHighlight
+                        onPress={() => this.toggleCommentSection()}
+                    >
+                        <Text style={styles.commentSectionTitle}>Comments</Text>
+                    </TouchableHighlight>
+                    <FlatList
+                        data={this.state.comments}
+                        renderItem={this.renderCommentItem}
+                        keyExtractor={(item) => item.id}
+                    />
+                </View>
             </View>
         )
     }
 }
+
+const mapStateToProps = state => ({
+    user: state.user
+})
+
+export default connect(mapStateToProps)(Company)
 
 const styles = StyleSheet.create({
     container: {
@@ -29,7 +62,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '100%',
-        height: '50%',
+        height: '45%',
         resizeMode: 'cover'
     },
     name: {
@@ -60,11 +93,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginTop: 5
     },
-    commentSection: {
-        alignSelf: 'center',
-        width: '100%',
-        position: 'absolute',
-        bottom: 0,
+    commentSection: {   
         padding: 10
     },
     commentSectionTitle: {

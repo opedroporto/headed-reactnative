@@ -14,7 +14,7 @@ export default class Company extends React.Component {
     _signup = async () => {
         try {
             await signup(this.state.email, this.state.username,  this.state.password)
-            this.props.navigation.push('LoginScreen', {sucsessMsg: 'Account successfully created!'})
+            this.props.navigation.push('LoginScreen', {successMsg: 'Account successfully created!'})
         } catch(err) {
             const errMessage = err.message
             this.setState({err: errMessage})

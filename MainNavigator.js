@@ -7,11 +7,11 @@ import { connect } from 'react-redux'
 import Profile from './screens/Profile'
 import Home from './screens/Home'
 import Company from './screens/Company'
-
-import LoginNavigator from './LoginNavigator'
+import Login from './screens/Login'
+import LoginNavigator from './LoginNavigator';
 
 const HomeStack = createStackNavigator()
-const MainStack = createDrawerNavigator()
+const MainDrawer = createDrawerNavigator()
 
 function HomeNavigator() { 
     return (
@@ -20,8 +20,6 @@ function HomeNavigator() {
           headerStyle: {
             backgroundColor: '#db2745',
             height: 50
-          },
-          headerTitleStyle: {
           },
           headerTintColor: '#fff',
           headerShadowVisible: false
@@ -36,26 +34,25 @@ function HomeNavigator() {
 class MainNavigator extends React.Component {
     render() {
         return (
-            <MainStack.Navigator
+            <MainDrawer.Navigator
                 initialRouteName='HomeNavigator'
                 screenOptions={{
-                    headerStyle: {
-                    backgroundColor: '#db2745',
-                    height: 50
-                    },
-                    headerTitleStyle: {
+                      headerStyle: {
+                      backgroundColor: '#db2745',
+                      height: 50
                     },
                     headerTintColor: '#fff',
-                    headerShadowVisible: false
+                    headerShadowVisible: false,
+                    unmountOnBlur: true
                 }}
             >
-                { this.props.user ?
-                  (<MainStack.Screen name='Login' component={Profile} options={{title: 'Your profile'}} />)
-                  :
-                  (<MainStack.Screen name='LoginNavigator' component={LoginNavigator} options={{title: 'Log in', headerShown: false}} />)
-                }
-                <MainStack.Screen name='HomeNavigator' component={HomeNavigator} options={{title: 'Main companies'}}  />
-            </MainStack.Navigator>
+                { this.props.user.accessToken ? (
+                <MainDrawer.Screen name='ProfileScreen' component={Profile} options={{title: 'Your profile'}} />
+                  ) : (
+                <MainDrawer.Screen name='LoginNavigator' component={LoginNavigator} options={{title: 'Log in', headerShown: false}} />
+                )}
+                <MainDrawer.Screen name='HomeNavigator' component={HomeNavigator} options={{title: 'Main companies'}}  />
+            </MainDrawer.Navigator>
         )
     }
 }

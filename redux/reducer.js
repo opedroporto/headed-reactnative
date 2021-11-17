@@ -11,7 +11,7 @@ const addEntryReducer = (state = [], action) => {
             return state
     }
 }
-const addUserReducer = (state = [], action) => {
+const addUserReducer = (state = {}, action) => {
     switch (action.type) {
         case UPDATE_USER:
             return action.payload

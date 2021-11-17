@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler'
-import React from 'react';
+import * as React from 'react';
 import { StatusBar } from 'react-native';
 
 import { Provider } from 'react-redux'
@@ -11,16 +11,16 @@ import { NavigationContainer } from '@react-navigation/native'
 import LoginNavigator from './LoginNavigator'
 import MainNavigator from './MainNavigator';
 
-const AppStack = createStackNavigator()
+const AppNavigatorStack = createStackNavigator()
 
 export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <AppStack.Navigator screenOptions={{headerShown: false}}>
-          <AppStack.Screen name='LoginNavigator' component={LoginNavigator} />
-          <AppStack.Screen name='MainNavigator' component={MainNavigator} />
-        </AppStack.Navigator> 
+        <AppNavigatorStack.Navigator screenOptions={{headerShown: false}}>
+          <AppNavigatorStack.Screen name='LoginNavigator' component={LoginNavigator} />
+          <AppNavigatorStack.Screen name='MainNavigator' component={MainNavigator} />
+        </AppNavigatorStack.Navigator>
         <StatusBar backgroundColor='#db2745' barStyle='default'/>
       </NavigationContainer>
     </Provider>

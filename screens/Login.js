@@ -14,7 +14,7 @@ class Login extends React.Component {
 
     componentDidMount() {
         try {
-            this.setState({sucsessMsg: this.props.route.params.sucsessMsg})
+            this.setState({sucsessMsg: this.props.route.params.successMsg})
         } catch(e){}
     }
 
@@ -22,12 +22,12 @@ class Login extends React.Component {
         try {
             
             // login attempt
-            const token = await login(this.state.username,  this.state.password)
+            const { accessToken } = await login(this.state.username,  this.state.password)
 
             // add user from database to local storage
-            const user = await fetchUserData(token, this.state.username)
-            
-            user.token = token
+            const user = await fetchUserData(accessToken)
+            user.accessToken = accessToken
+
             this.props.dispatch(addUser(user))
 
             // navigate to home
@@ -67,7 +67,7 @@ class Login extends React.Component {
                     </View>
                     <View style={styles.whiteContainer}>
                         <KeyboardAvoidingView style={styles.inputContainer} behavior='padding'>
-                            <Text style={styles.pageTitle}>Login into your account</Text>
+                            <Text style={styles.pageTitle}>Log into your account</Text>
                             { !this.state.err && (<Text style={styles.sucsessMsg}>{this.state.sucsessMsg}</Text>)}
                             <Text style={styles.errorMsg}>{this.state.err}</Text>
                             <View style={styles.input}>
@@ -123,7 +123,7 @@ class Login extends React.Component {
                                     <Text
                                         style={styles.secondaryText}
                                         onPress={() => {
-                                            this.props.dispatch(addUser(null))
+                                            this.props.dispatch(addUser({}))
                                             this.props.navigation.reset({
                                                 index: 0,
                                                 routes: [{ name: 'MainNavigator' }],

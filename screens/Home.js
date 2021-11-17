@@ -3,12 +3,12 @@ import {Dimensions, Image, Text, StyleSheet, View, SectionList, TouchableOpacity
 import { fetchEntriesData } from '../backendApi.js'
 
 import { addEntry } from '../redux/actions'
-import {connect} from 'react-redux'
+import { connect  } from 'react-redux'
 
 class Home extends React.Component {
 
     componentDidMount = async() => {
-        let entries = await fetchEntriesData(this.props.user.token || null)
+        let entries = await fetchEntriesData(this.props.user.accessToken)
         this.props.dispatch(addEntry(entries))
     }
 
