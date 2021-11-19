@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 import Login from './screens/Login'
 import Signup from './screens/Signup'
+import Email from './screens/Email'
 
 const LoginStack = createStackNavigator()
 
@@ -24,6 +25,7 @@ export default function LoginNavigator() {
       }}
     >
       <LoginStack.Screen name='LoginScreen' component={Login} />
+      <LoginStack.Screen name='EmailScreen' component={Email} />
       <LoginStack.Screen name='SignupScreen' component={Signup} />
     </LoginStack.Navigator>
   )

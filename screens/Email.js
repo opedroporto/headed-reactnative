@@ -1,45 +1,45 @@
 import * as React from 'react'
 import { ImageBackground, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Icon } from 'react-native-elements'
+import { connect } from 'react-redux'
+import { addUser } from '../redux/actions'
 
-import { signup } from '../backendApi.js'
+import { login, fetchUserData, addEmail } from '../backendApi'
 
-export default class Company extends React.Component {
+class Email extends React.Component {
     state = {
-        username: '',
-        password: ''
+        email: ''
     }
 
-    _signup = async () => {
+    componentDidMount = async () => {
         try {
-            // sign up user
-            await signup(this.state.username,  this.state.password)
-            this.props.navigation.reset({
-                index: 0,
-                routes: [
-                {name: 'EmailScreen', params: {
-                    successMsg: 'Account successfully created!',
-                    user: {
-                        username: this.state.username,
-                        password: this.state.password
-                    }
-                }}]
-              });
+            this.setState({successMsg: this.props.route.params.successMsg})
+        } catch(e){}
+
+        // login
+        const { accessToken } = await login(this.props.route.params.user.username,  this.props.route.params.user.password)
+
+        // add user from database to local storage
+        const user = await fetchUserData(accessToken)
+        user.accessToken = accessToken
+
+        this.props.dispatch(addUser(user))
+    }
+
+    _confirmEmail = async () => {
+        try {
+            const result = await addEmail(this.props.user.accessToken, this.state.email)
+            this.setState({emailSentMsg: result, successMsg: '', errorMsg: ''})
         } catch(err) {
             const errMessage = err.message
-            this.setState({err: errMessage})
+            this.setState({errorMsg: errMessage, successMsg: '', emailSentMsg: ''})
+            this.forceUpdate()
         }
     }
 
-    handleUsernameUpdate = username => {
-        /^[\x00-\x7F]*$/.test(username) &&
-        username.length <= 18 &&
-        this.setState({ username: username })
-    }
-
-    handlePasswordUpdate = password => {
-        password.length <= 128 &&
-        this.setState({ password: password })
+    handleEmailUpdate = email => {
+        email.length <= 320 &&
+        this.setState({ email: email })
     }
 
     render() {  
@@ -52,56 +52,46 @@ export default class Company extends React.Component {
                 <View style={styles.container}>
                     <View style={styles.whiteContainer}>
                         <KeyboardAvoidingView style={styles.inputContainer} behavior='padding'>
-                            <Text style={styles.title}>Create an account</Text>
-                            <Text style={styles.errorMsg}>{this.state.err}</Text>
+                            <Text style={styles.title}>Add e-mail</Text>
+                            {/* { (!this.state.err) && (<Text style={styles.successMsg}>{this.state.successMsg}</Text>)}
+                            <Text style={styles.successMsg}>{this.state.emailSentMsg}</Text>
+                            { (!this.state.emailSentMsg) && (<Text style={styles.errorMsg}>{this.state.err}</Text>)} */}
+                            <Text style={styles.successMsg}>{this.state.successMsg}</Text>
+                            <Text style={styles.errorMsg}>{this.state.errorMsg}</Text>
+                            <Text style={styles.successMsg}>{this.state.emailSentMsg}</Text>
                             <View style={styles.input}>
                                 <Icon
                                     style={styles.icon}
-                                    name='user'
-                                    type='font-awesome'
+                                    name='mail'
+                                    type='entypo'
                                     color='#db2745'
                                     size={20}
                                 />
                                 <TextInput
                                     style={styles.inputField}
-                                    placeholder='Username'
-                                    value={this.state.username}
-                                    onChangeText={this.handleUsernameUpdate}
+                                    placeholder='E-mail'
+                                    value={this.state.email}
+                                    onChangeText={this.handleEmailUpdate}
                                     autoCapitalize='none'
-                                />
-                            </View>
-                            <View style={styles.input}>
-                                <Icon
-                                    style={styles.icon}
-                                    name='lock'
-                                    type='font-awesome'
-                                    color='#db2745'
-                                    size={20}
-                                />
-                                <TextInput
-                                    style={styles.inputField}
-                                    placeholder='Password'
-                                    value={this.state.password}
-                                    onChangeText={this.handlePasswordUpdate}
-                                    autoCapitalize='none'
-                                    secureTextEntry
                                 />
                             </View>
                         </KeyboardAvoidingView>
-                        <TouchableOpacity style={styles.signupButton} onPress={this._signup}>
-                            <Text style={styles.signupText}>Sign up</Text>
+                        <TouchableOpacity style={styles.signupButton} onPress={this._confirmEmail}>
+                            <Text style={styles.signupText}>Confirm</Text>
                         </TouchableOpacity>
-                        <View style={styles.bottomSection}>
-                            <Text>
-                                Already have an account?  <Text style={styles.clickableText} onPress={() => this.props.navigation.push('LoginScreen')}>Login</Text>
-                            </Text>
-                        </View>
                     </View>
                 </View>
             </ImageBackground>
         )
     }
 }
+
+const mapStateToProps = state => ({
+    user: state.user
+})
+
+export default connect(mapStateToProps)(Email)
+
 
 const styles = StyleSheet.create({
     container: {
@@ -176,12 +166,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: 'white',
     },
-    bottomSection: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        alignItems: 'center'
-    },
     clickableText: {
         color: '#66f'
-    }
+    },
+    successMsg: {
+        position: 'absolute',
+        top: 50,
+        color: 'green'
+    },
 })

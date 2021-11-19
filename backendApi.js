@@ -17,13 +17,13 @@ export const login = async (username, password) => {
     throw new Error(errMessage)
 }
 
-export const signup = async (email, username, password) => {
+export const signup = async (username, password) => {
     const response = await fetch('http://192.168.15.11:8080/addUser', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
         },
-        body: JSON.stringify({email, username, password})
+        body: JSON.stringify({username, password})
     })
         
     if(response.ok) {
@@ -99,6 +99,43 @@ export const editProfile = async (token, userData) => {
 
     if(response.ok) {
         const result = await response.json()
+        return result
+    }
+
+    const errMessage = await response.text()
+    throw new Error(errMessage)
+}
+
+export const addComment = async (token, newComment, companyID) => {
+    const response = await fetch('http://192.168.15.11:8080/addComment', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({newComment, companyID})
+    })
+
+    if(response.ok) {
+        return true
+    }
+
+    const errMessage = await response.text()
+    throw new Error(errMessage)
+}
+
+export const addEmail = async (token, email) => {
+    const response = await fetch('http://192.168.15.11:8080/addEmail', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({email})
+    })
+
+    if(response.ok) {
+        const result = await response.text()
         return result
     }
 

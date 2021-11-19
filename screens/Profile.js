@@ -1,13 +1,13 @@
 import * as React from 'react'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import { Button } from 'react-native-elements/dist/buttons/Button'
+import { TextInput, KeyboardAvoidingView      } from 'react-native'
 
 import { addUser } from '../redux/actions'
 import { connect } from 'react-redux'
 
 import { fetchUserData, editProfile } from '../backendApi'
-import { TextInput } from 'react-native-gesture-handler'
 
 class Profile extends React.Component {
 
@@ -108,11 +108,12 @@ class Profile extends React.Component {
                                     <Text>{ this.props.user['email'] }</Text>
                                 </Text>
                                 <View style={styles.bottomContainer}>
-                                    <Button
-                                        title='Edit profile' 
-                                        color='#f00'
+                                    <TouchableOpacity 
                                         onPress={() => this._editMode()}
-                                    />
+                                        style={styles.editButton}
+                                    >
+                                            <Text style={styles.buttonText}>Edit profile</Text>
+                                    </TouchableOpacity>
                                     <Button
                                         title='Sign out' 
                                         color='#f00'
@@ -122,13 +123,14 @@ class Profile extends React.Component {
                             </View>
                         </React.Fragment>
                 ) : (
+                    // edit profile mode
                     <React.Fragment>
                         <View style={styles.infoContainer}>
                             <Text style={styles.info}>
                                 <Text style={styles.bold}>Username: </Text>
                                 <Text>{ this.props.user['username'] }</Text>
                             </Text>
-                            <View style={styles.editableContainer}>
+                            <KeyboardAvoidingView style={styles.editableContainer}>
                                 <Text style={styles.tag}>E-mail: </Text>
                                 <TextInput
                                     style={styles.inputField}
@@ -144,19 +146,21 @@ class Profile extends React.Component {
                                     size={10}
                                     margin={1}
                                 />
-                            </View>
+                            </KeyboardAvoidingView>
                             <Text style={styles.errorMsg}>{this.state.errorMsg}</Text>
                             <View style={styles.bottomContainer}>
-                                <Button
-                                    title='Save edits' 
-                                    color='#0ff'
+                                <TouchableOpacity 
                                     onPress={() => this._editProfile()}
-                                />
-                                <Button
-                                    title='Discard changes' 
-                                    color='#f00'
+                                    style={styles.editButton}
+                                >
+                                        <Text style={styles.buttonText}>Save edits</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity 
                                     onPress={() => this._normalMode() }
-                                />
+                                    style={styles.discardButton}
+                                >
+                                        <Text style={styles.buttonText}>Discard changes</Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </React.Fragment>
@@ -224,6 +228,27 @@ const styles = StyleSheet.create({
     },
     errorMsg: {
         color: 'red',
-        alignSelf: 'center'
-    }
+        alignSelf: 'center',
+        margin: 10
+    },
+    editButton: {
+        backgroundColor: '#1da6f0',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
+        height: 40,
+        margin: 5
+    },
+    discardButton: {
+        backgroundColor: '#c21b26',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
+        height: 40,
+        margin: 5
+    },
+    buttonText: {
+        fontSize: 18,
+        color: 'white'
+    },
 })

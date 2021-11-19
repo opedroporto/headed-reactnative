@@ -14,10 +14,9 @@ const app = Express()
 const PORT = process.env.PORT2 || 8000
 app.use(bodyParser.json())
 
-let refreshTokens = []
-
 app.post('/login', (req, res) => {
     const {username, password} = req.body
+    console.log(username, password)
 
     // verify if fields exist
     if (!username) return res.status(400).send('Missing username')
@@ -45,7 +44,6 @@ app.post('/login', (req, res) => {
                     // valid: log user
                     const accessToken = generateAccessToken({username})
 
-                    console.log(`User ${username} logged in`)
                     return res.status(200).json({accessToken: accessToken})
                 })
 

@@ -56,13 +56,15 @@ export default connect(mapStateToProps)(Home)
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: '#db2745'
     },
     card: {
         flex: 1,
-        backgroundColor: '#db2745',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ea8192',
+        backgroundColor: 'white',
+        borderRadius: 5,
+        marginHorizontal: 2,
+        marginVertical: 1,
         height: 80,
     },
     cardRow: {
@@ -71,16 +73,17 @@ const styles = StyleSheet.create({
     },
     mainInfoContainer: {
         flex: 1,
-        paddingHorizontal: 6,
-        paddingBottom: 4
+        paddingHorizontal: 6
     },
     image: {
         width: 80,
-        height: 80
+        height: 80,
+        borderTopLeftRadius: 5,
+        borderBottomLeftRadius: 5
     },
     mainInfoTitle: {
         fontSize: 18,
-        color: '#fff',
+        color: '#db2745',
         fontWeight: 'bold'
     },
     mainInfoSubtitle: {
@@ -90,9 +93,8 @@ const styles = StyleSheet.create({
     },
     mainInfoDescriptionSection: {
         flex: 1,
-        justifyContent: 'flex-end',
     },
     mainInfoDescription: {    
-        color: '#fff'
+        color: '#db2745',
     }
 })

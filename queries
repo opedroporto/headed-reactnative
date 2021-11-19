@@ -17,3 +17,5 @@ db.comments.aggregate([{$match: {"messageContent": "Very good!"}}, {$lookup: {fr
 db.entries.aggregate([{$match: {"name": "Zax"s"}}, {$lookup: {from: "comments", localField: "comments", foreignField: "_id", as: "comments" }}]).pretty()
 
 db.comments.findOneAndUpdate({'messageContent': 'Great Store'}, {$set: {'company': ObjectId('61952203b03337705759aa04')}}).pretty()
+
+db.comments.aggregate([{$match: {'company': ObjectId('6192dcfc3a4e67db584ec0c2')}}, {$lookup: {from: 'users', localField: 'user', foreignField: '_id', as: 'user'}}, {$project: {messageContent: 1, user: {username: 1}}}]).pretty()
