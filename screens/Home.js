@@ -21,8 +21,8 @@ class Home extends React.Component {
                 <View style={styles.cardRow}>
                     <Image style={styles.image} source={{'uri': obj.item.image}}/>
                     <View style={styles.mainInfoContainer}>
-                        <Text style={styles.mainInfoTitle}>{ obj.item.name }</Text>
-                        <Text style={styles.mainInfoSubtitle}>{ obj.item.rating } ✦</Text>
+                        <Text style={styles.mainInfoTitle} numberOfLines={1}>{ obj.item.name }</Text>
+                        <Text style={styles.mainInfoSubtitle}>{((obj.item.ratings.reduce((total, next) => total + next.ecoRating, 0) / obj.item.ratings.length + obj.item.ratings.reduce((total, next) => total + next.productsServicesRating, 0) / obj.item.ratings.length) / 2) || 0}/10 ✦</Text>
                         <View style={styles.mainInfoDescriptionSection}>
                             <Text style={styles.mainInfoDescription} numberOfLines={numberOfLines}>{ obj.item.description }</Text>
                         </View>
@@ -38,9 +38,16 @@ class Home extends React.Component {
                 { this.props.entries &&
                     <SectionList
                         renderItem={this.renderItem}
-                        keyExtractor={(item, index) => item + index}
                         sections={[{data: this.props.entries}]}
+                        keyExtractor={(item, index) => item + index}
                     />
+                }
+                { this.props.user.accessToken &&
+                    <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate('AddCompanyScreen')}
+                        style={styles.roundButton}>
+                        <Text style={styles.plusIcon}>+</Text>
+                    </TouchableOpacity>
                 }
             </View>
         )
@@ -96,5 +103,21 @@ const styles = StyleSheet.create({
     },
     mainInfoDescription: {    
         color: '#db2745',
+    },
+    roundButton: {
+        width: 75,
+        height: 75,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 100,
+        backgroundColor: 'white',
+        margin: 10,
+        position: 'absolute',
+        bottom: 0,
+        right: 0
+    },
+    plusIcon: {
+        fontSize: 50,
+        color: '#db2745'
     }
 })

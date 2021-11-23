@@ -7,15 +7,18 @@ import { connect } from 'react-redux'
 import Profile from './screens/Profile'
 import Home from './screens/Home'
 import Company from './screens/Company'
-import Login from './screens/Login'
+import AddCompany from './screens/AddCompany'
 import LoginNavigator from './LoginNavigator';
+import Email from './screens/Email'
 
 const HomeStack = createStackNavigator()
 const MainDrawer = createDrawerNavigator()
 
 class HomeNavigator extends React.Component{
   render() {
-    this.props.navigation.setOptions({headerShown: true})
+    try {
+      this.props.navigation.setOptions({headerShown: true})
+    } catch (e) {}
     return (
       <HomeStack.Navigator
         screenOptions={{
@@ -24,11 +27,12 @@ class HomeNavigator extends React.Component{
             height: 50
           },
           headerTintColor: '#fff',
-          headerShadowVisible: false,
+          headerShadowVisible: false
         }}
       >
         <HomeStack.Screen name='HomeScreen' component={Home} options={{title: 'Main companies', headerShown: false}} />
         <HomeStack.Screen name='CompanyScreen' component={Company} options={{title: 'Company'}}/>
+        <HomeStack.Screen name='AddCompanyScreen' component={AddCompany} options={{title: 'New company'}}/>
       </HomeStack.Navigator>
     )
   }
@@ -52,6 +56,13 @@ class MainNavigator extends React.Component {
                 }}
               >
                 <MainDrawer.Screen name='ProfileScreen' component={Profile} options={{title: 'Your profile'}} />
+                <MainDrawer.Screen
+                  name='EmailScreen'
+                  component={Email}
+                  options={{
+                    drawerItemStyle: { height: 0 }
+                  }}
+                />
                 <MainDrawer.Screen name='HomeNavigator' component={HomeNavigator} options={{title: 'Main companies'}} />
               </MainDrawer.Navigator>
             ) : (
@@ -68,7 +79,7 @@ class MainNavigator extends React.Component {
                 }}
               >
                 <MainDrawer.Screen name='LoginNavigator' component={LoginNavigator} options={{title: 'Log in', headerShown: false}} />
-                <MainDrawer.Screen name='HomeNavigator' component={HomeNavigator} options={{title: 'Main companies'}} />
+                <MainDrawer.Screen name='HomeNavigator' component={HomeNavigator} options={{title: 'Main companies'}}/>
               </MainDrawer.Navigator>
             )}
           </React.Fragment>

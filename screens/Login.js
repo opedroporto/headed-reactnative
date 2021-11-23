@@ -45,12 +45,12 @@ class Login extends React.Component {
     handleUsernameUpdate = username => {
         /^[\x00-\x7F]*$/.test(username) &&
         username.length <= 18 &&
-        this.setState({ username: username })
+        this.setState({ username })
     }
 
     handlePasswordUpdate = password => {
         password.length <= 128 &&
-        this.setState({ password: password })
+        this.setState({ password })
     }
     
     render() {
@@ -78,13 +78,13 @@ class Login extends React.Component {
                                     color='#db2745'
                                     size={20}
                                 />
-                                <TextInput
-                                    style={styles.inputField}
-                                    placeholder='Username'
-                                    value={this.state.username}
-                                    onChangeText={this.handleUsernameUpdate}
-                                    autoCapitalize='none'
-                                />
+                                    <TextInput
+                                        style={styles.inputField}
+                                        placeholder='Username'
+                                        value={this.state.username}
+                                        onChangeText={this.handleUsernameUpdate}
+                                        autoCapitalize='none'
+                                    />
                             </View>
                             <View style={styles.input}>
                                 <Icon

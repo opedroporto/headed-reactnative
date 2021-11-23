@@ -19,3 +19,31 @@ db.entries.aggregate([{$match: {"name": "Zax"s"}}, {$lookup: {from: "comments", 
 db.comments.findOneAndUpdate({'messageContent': 'Great Store'}, {$set: {'company': ObjectId('61952203b03337705759aa04')}}).pretty()
 
 db.comments.aggregate([{$match: {'company': ObjectId('6192dcfc3a4e67db584ec0c2')}}, {$lookup: {from: 'users', localField: 'user', foreignField: '_id', as: 'user'}}, {$project: {messageContent: 1, user: {username: 1}}}]).pretty()
+
+db.companies.insertMany(
+    [
+        {
+            "image" : "https://i.pinimg.com/736x/51/42/8d/51428da23cd4794e8f0a070d0b5147ab.jpg",
+            "name" : "Buy now store",
+            "description" : "We sell goods."
+        },
+        {
+            "image" : "https://i.pinimg.com/originals/b2/ba/86/b2ba861d1024ebda7386d235a7f0a002.png",
+            "name" : "Zax's",
+            "description" : "Zax's is a jewelry store chain with more than 200 stores over 3 countries. It sells jewels such as diamond and other crystals and precious ores.",
+        }
+    ]
+)
+
+db.ratings.insertMany(
+    [
+        {
+            "user" : ObjectId("619bc2bb5ab52ef275aceafb"),
+            "ecoRating": 5,
+            "productsServicesRating": 5,
+            "company" : ObjectId("6192dcfc3a4e67db584ec0c2")
+        }
+    ]
+)
+
+db.companies.aggregate([{$match: {}}, {$lookup: {from: 'ratings', localField: '_id', foreignField: 'company', as: 'ratings' }}, {$project: {image: 1, name: 1, description: 1, ratings: {ecoRating: 1, productsServicesRating: 1} }}]).pretty()

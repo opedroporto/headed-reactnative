@@ -142,3 +142,79 @@ export const addEmail = async (token, email) => {
     const errMessage = await response.text()
     throw new Error(errMessage)
 }
+
+export const verifyCode = async(token, email, code) => {
+    const response = await fetch('http://192.168.15.11:8080/verifyCode', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({email, code})
+    })
+
+    if(response.ok) {
+        const result = await response.text()
+        return result
+    }
+
+    const errMessage = await response.text()
+    throw new Error(errMessage)
+}
+
+export const updateCompanyRatings = async(token, companyID, ratings) => {
+    const response = await fetch('http://192.168.15.11:8080/updateCompanyRatings', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({companyID, ratings})
+    })
+
+    if(response.ok) {
+        const result = await response.text()
+        return result
+    }
+
+    const errMessage = await response.text()
+    throw new Error(errMessage)
+}
+
+export const fetchUserRatings = async(token, companyID) => {
+    const response = await fetch('http://192.168.15.11:8080/fetchUserRatings', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({companyID})
+    })
+
+    if(response.ok) {
+        const result = await response.json()
+        return result
+    }
+
+    const errMessage = await response.text()
+    throw new Error(errMessage)
+}
+
+export const addCompany = async (token, company) => {
+    const response = await fetch('http://192.168.15.11:8080/addCompany', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({token, company})
+    })
+
+    if(response.ok) {
+        const result = await response.text()
+        return result
+    }
+
+    const errMessage = await response.text()
+    throw new Error(errMessage)
+}

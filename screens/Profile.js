@@ -44,26 +44,34 @@ class Profile extends React.Component {
     }
 
     _editProfile = async () => {
-        try {
-            let newData = {
-                email: this.state.newEmail
-            }
-    
-            // edit
-            await editProfile(this.props.user.accessToken, newData)
-    
-            // reload user data
-            const user = await fetchUserData(this.props.user.accessToken)
-            if (user.username) {
-                user.accessToken = this.props.user.accessToken
-            }
-            this.props.dispatch(addUser(user))
-            
+        if ((this.state.newEmail) !== (this.props.user.email)) {
+            // update email (with verification)
+            this.props.navigation.navigate('EmailScreen', {newEmail: this.state.newEmail, profileEdit: true})
+        } else {
             // leave edit mode
             this.setState({ editMode: false })
-        } catch(error){
-            this.setState({errorMsg: error.message})
         }
+
+        // try {
+        //     let newData = {
+        //         email: this.state.newEmail
+        //     }
+    
+        //     // edit
+        //     await editProfile(this.props.user.accessToken, newData)
+    
+        //     // reload user data
+        //     const user = await fetchUserData(this.props.user.accessToken)
+        //     if (user.username) {
+        //         user.accessToken = this.props.user.accessToken
+        //     }
+        //     this.props.dispatch(addUser(user))
+            
+        //     // leave edit mode
+        //     this.setState({ editMode: false })
+        // } catch(error){
+        //     this.setState({errorMsg: error.message})
+        // }
     }
 
     _signout () {
@@ -130,7 +138,7 @@ class Profile extends React.Component {
                                 <Text style={styles.bold}>Username: </Text>
                                 <Text>{ this.props.user['username'] }</Text>
                             </Text>
-                            <KeyboardAvoidingView style={styles.editableContainer}>
+                            <KeyboardAvoidingView style={styles.editableContainer} behavior={'padding'}>
                                 <Text style={styles.tag}>E-mail: </Text>
                                 <TextInput
                                     style={styles.inputField}
@@ -148,7 +156,7 @@ class Profile extends React.Component {
                                 />
                             </KeyboardAvoidingView>
                             <Text style={styles.errorMsg}>{this.state.errorMsg}</Text>
-                            <View style={styles.bottomContainer}>
+                            <View style={styles.bottomEditContainer}>
                                 <TouchableOpacity 
                                     onPress={() => this._editProfile()}
                                     style={styles.editButton}
@@ -195,7 +203,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#db2745',
         borderTopStartRadius: 20,
         borderTopEndRadius: 20,
-        padding: 15
+        padding: 15,
     },
     info: {
         fontSize: 22,
@@ -211,11 +219,16 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end'
     },
+    bottomEditContainer: {
+        flex: 1,
+        justifyContent: 'center'
+    },
     editableContainer: {
         flexDirection: 'row',
         padding: 10,
         borderBottomWidth: 1,
-        borderBottomColor: 'white'
+        borderBottomColor: 'white',
+        marginBottom: 15
     },
     tag: {
         fontWeight: 'bold',
