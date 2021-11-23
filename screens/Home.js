@@ -1,11 +1,16 @@
 import * as React from 'react'
-import {Dimensions, Image, Text, StyleSheet, View, SectionList, TouchableOpacity} from 'react-native'
+import { Dimensions, Image, Text, StyleSheet, View, SectionList, TextInput, TouchableOpacity } from 'react-native'
 import { fetchEntriesData } from '../backendApi.js'
 
 import { addEntry } from '../redux/actions'
 import { connect  } from 'react-redux'
 
 class Home extends React.Component {
+
+    state = {
+        searchInput: '',
+        entries: this.props.entries
+    }
 
     componentDidMount = async() => {
         let entries = await fetchEntriesData(this.props.user.accessToken)
@@ -32,16 +37,34 @@ class Home extends React.Component {
         )
     }
 
+    handleSearchInputUpdate = searchInput => {
+        searchInput.length <= 10000 &&
+        this.setState({ searchInput })
+
+        // filter array
+        this.setState({
+            entries: this.props.entries.filter(entries => entries.name.toLowerCase().includes(searchInput.toLowerCase()))
+        })
+    }
+
     render() {
         return (
             <View style={styles.container}>
-                { this.props.entries &&
-                    <SectionList
-                        renderItem={this.renderItem}
-                        sections={[{data: this.props.entries}]}
-                        keyExtractor={(item, index) => item + index}
-                    />
-                }
+                <TextInput
+                    style={styles.inputField}
+                    placeholder='Search for companies...'
+                    value={this.state.searchInput}
+                    onChangeText={this.handleSearchInputUpdate}
+                />
+                <SectionList
+                    renderItem={this.renderItem}
+                    sections={[
+                        {data: this.state.entries.sort(function(one, other) {
+                            return one.ratings.length < other.ratings.length
+                        })}
+                    ]}
+                    keyExtractor={(item, index) => item + index}
+                />
                 { this.props.user.accessToken &&
                     <TouchableOpacity
                         onPress={() => this.props.navigation.navigate('AddCompanyScreen')}
@@ -114,10 +137,15 @@ const styles = StyleSheet.create({
         margin: 10,
         position: 'absolute',
         bottom: 0,
-        right: 0
+        right: 0,
+        elevation: 20,
     },
     plusIcon: {
         fontSize: 50,
-        color: '#db2745'
+        color: '#db2745',
+    },
+    inputField: {
+        width: '100%',
+        padding: 5,
     }
 })
