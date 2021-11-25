@@ -1,5 +1,5 @@
 export const login = async (username, password) => {
-    const response = await fetch('http://192.168.15.11:8000/login', {
+    const response = await fetch('https://headed-auth.herokuapp.com/login', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
@@ -18,7 +18,7 @@ export const login = async (username, password) => {
 }
 
 export const signup = async (username, password) => {
-    const response = await fetch('http://192.168.15.11:8080/addUser', {
+    const response = await fetch('https://headed-auth.herokuapp.com/signup', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
@@ -27,7 +27,8 @@ export const signup = async (username, password) => {
     })
         
     if(response.ok) {
-        return true
+        const result = await response.json()
+        return result
     }
 
     const errMessage = await response.text()
@@ -35,7 +36,7 @@ export const signup = async (username, password) => {
 }
 
 export const fetchUserData = async (token) => {
-    const response = await fetch('http://192.168.15.11:8080/fetchUserData', {
+    const response = await fetch('https://headed.herokuapp.com/fetchUserData', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -53,7 +54,7 @@ export const fetchUserData = async (token) => {
 }
 
 export const fetchEntriesData = async (token) => {
-    const response = await fetch('http://192.168.15.11:8080/fetchEntriesData', {
+    const response = await fetch('https://headed.herokuapp.com/fetchEntriesData', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -70,7 +71,7 @@ export const fetchEntriesData = async (token) => {
 }
 
 export const fetchEntrieComments = async (token, companyID) => {
-    const response = await fetch('http://192.168.15.11:8080/fetchEntrieComments', {
+    const response = await fetch('https://headed.herokuapp.com/fetchEntrieComments', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -88,7 +89,7 @@ export const fetchEntrieComments = async (token, companyID) => {
 }
 
 export const editProfile = async (token, userData) => {
-    const response = await fetch('http://192.168.15.11:8080/editProfile', {
+    const response = await fetch('https://headed.herokuapp.com/editProfile', {
         method: 'PUT',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -107,7 +108,7 @@ export const editProfile = async (token, userData) => {
 }
 
 export const addComment = async (token, newComment, companyID) => {
-    const response = await fetch('http://192.168.15.11:8080/addComment', {
+    const response = await fetch('https://headed.herokuapp.com/addComment', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -125,7 +126,7 @@ export const addComment = async (token, newComment, companyID) => {
 }
 
 export const addEmail = async (token, email) => {
-    const response = await fetch('http://192.168.15.11:8080/addEmail', {
+    const response = await fetch('https://headed.herokuapp.com/addEmail', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -144,7 +145,7 @@ export const addEmail = async (token, email) => {
 }
 
 export const verifyCode = async(token, email, code) => {
-    const response = await fetch('http://192.168.15.11:8080/verifyCode', {
+    const response = await fetch('https://headed.herokuapp.com/verifyCode', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -163,7 +164,7 @@ export const verifyCode = async(token, email, code) => {
 }
 
 export const updateCompanyRatings = async(token, companyID, ratings) => {
-    const response = await fetch('http://192.168.15.11:8080/updateCompanyRatings', {
+    const response = await fetch('https://headed.herokuapp.com/updateCompanyRatings', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -182,7 +183,7 @@ export const updateCompanyRatings = async(token, companyID, ratings) => {
 }
 
 export const fetchUserRatings = async(token, companyID) => {
-    const response = await fetch('http://192.168.15.11:8080/fetchUserRatings', {
+    const response = await fetch('https://headed.herokuapp.com/fetchUserRatings', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -201,7 +202,7 @@ export const fetchUserRatings = async(token, companyID) => {
 }
 
 export const addCompany = async (token, company) => {
-    const response = await fetch('http://192.168.15.11:8080/addCompany', {
+    const response = await fetch('https://headed.herokuapp.com/addCompany', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,

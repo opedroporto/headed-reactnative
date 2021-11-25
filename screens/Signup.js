@@ -2,9 +2,12 @@ import * as React from 'react'
 import { ImageBackground, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 
-import { signup } from '../backendApi.js'
+import { connect } from 'react-redux'
+import { addUser } from '../redux/actions'
 
-export default class Company extends React.Component {
+import { signup, fetchUserData } from '../backendApi.js'
+
+class Signup extends React.Component {
     state = {
         username: '',
         password: ''
@@ -13,7 +16,16 @@ export default class Company extends React.Component {
     _signup = async () => {
         try {
             // sign up user
-            await signup(this.state.username,  this.state.password)
+            const { accessToken } = await signup(this.state.username,  this.state.password)
+            
+            // add user from database to local storage
+            const user = {
+                username: this.state.username,
+                accessToken
+            }
+            this.props.dispatch(addUser(user))
+            
+            // navigate to email screen
             this.props.navigation.reset({
                 index: 0,
                 routes: [
@@ -102,6 +114,12 @@ export default class Company extends React.Component {
         )
     }
 }
+
+const mapStateToProps = state => ({
+    user: state.user
+})
+
+export default connect(mapStateToProps)(Signup)
 
 const styles = StyleSheet.create({
     container: {

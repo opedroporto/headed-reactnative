@@ -16,20 +16,11 @@ class Email extends React.Component {
     componentDidMount = async () => {
         try {
             this.setState({email: this.props.route.params.newEmail, profileEdit: this.props.route.params.profileEdit})
-        } catch(e) {
-            try {
-                this.setState({successMsg: this.props.route.params.successMsg})
-            } catch(e){}
-    
-            // login
-            const { accessToken } = await login(this.props.route.params.user.username,  this.props.route.params.user.password)
-    
-            // add user from database to local storage
-            const user = await fetchUserData(accessToken)
-            user.accessToken = accessToken
-    
-            this.props.dispatch(addUser(user))
-        }
+        } catch(e) {}
+
+        try {
+            this.setState({successMsg: this.props.route.params.successMsg})
+        } catch(e) {}
     }
 
     _confirmEmail = async () => {

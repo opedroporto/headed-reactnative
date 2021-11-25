@@ -66,7 +66,7 @@ class Login extends React.Component {
                         <Image style={styles.logo} source={require('../assets/headed_logo.png')} resizeMode='cover'/>
                     </View>
                     <View style={styles.whiteContainer}>
-                        <KeyboardAvoidingView style={styles.inputContainer} behavior='padding'>
+                        <KeyboardAvoidingView style={styles.inputContainer} behavior={'padding'}>
                             <Text style={styles.pageTitle}>Log into your account</Text>
                             { !this.state.err && (<Text style={styles.sucsessMsg}>{this.state.sucsessMsg}</Text>)}
                             <Text style={styles.errorMsg}>{this.state.err}</Text>

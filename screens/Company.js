@@ -13,7 +13,10 @@ class Company extends React.Component {
         newComment: '',
         slide1Value: 0,
         slide2Value: 0,
-        overallRating: 0
+        overallRating: 0,
+        overallRatingNumber: 0,
+        ecoRatingNumber: 0,
+        productsServicesRatingNumber: 0
     }
 
     componentDidMount = async () => {
@@ -34,6 +37,12 @@ class Company extends React.Component {
                 overallRating: (userRatings.ecoRating + userRatings.productsServicesRating) / 2
             })
         }
+
+        this.setState({
+            overallRatingNumber: Math.round(((this.state.company.ratings.reduce((total, next) => total + next.ecoRating, 0) / this.state.company.ratings.length + this.state.company.ratings.reduce((total, next) => total + next.productsServicesRating, 0) / this.state.company.ratings.length) / 2) || 0),
+            ecoRatingNumber: Math.round((this.state.company.ratings.reduce((total, next) => total + next.ecoRating, 0) / this.state.company.ratings.length) || 0),
+            productsServicesRatingNumber: Math.round((this.state.company.ratings.reduce((total, next) => total + next.productsServicesRating, 0) / this.state.company.ratings.length) || 0)
+        })
         
     }
 
@@ -76,7 +85,7 @@ class Company extends React.Component {
     CompanyHeader = () => (
         <React.Fragment>
             <Image style={styles.image} source={{'uri': this.state.company.image}} />
-            <Text style={styles.name}><Text style={styles.rating}>{((this.state.company.ratings.reduce((total, next) => total + next.ecoRating, 0) / this.state.company.ratings.length + this.state.company.ratings.reduce((total, next) => total + next.productsServicesRating, 0) / this.state.company.ratings.length) / 2) || 0}/10 ✦  </Text>{ this.state.company.name }</Text>
+            <Text style={styles.name}><Text style={styles.rating}>{this.state.overallRatingNumber}/10 ✦  </Text>{ this.state.company.name }</Text>
             <View style={styles.info}>
                 <Text style={styles.descriptionTitle}>Description</Text>
                 <Text style={styles.description}>{ this.state.company.description }</Text>
@@ -87,12 +96,12 @@ class Company extends React.Component {
                 <View style={styles.sliderContainer}>
                     <View style={{flex: 1, flexDirection:'row', justifyContent:'center'}}>
                         <Text style={{margin: 10, color: '#db2745'}}>Overall rating:</Text>
-                        <Text style={{margin: 10, color: '#db2745'}}>{((this.state.company.ratings.reduce((total, next) => total + next.ecoRating, 0) / this.state.company.ratings.length + this.state.company.ratings.reduce((total, next) => total + next.productsServicesRating, 0) / this.state.company.ratings.length) / 2) || 0}</Text>
+                        <Text style={{margin: 10, color: '#db2745'}}>{this.state.overallRatingNumber}</Text>
                     </View>
                     <View style={{flex: 1, alignItems: 'center'}}>
                         <Slider
                             style={{width: '90%', height: 10}}
-                            value={((this.state.company.ratings.reduce((total, next) => total + next.ecoRating, 0) / this.state.company.ratings.length + this.state.company.ratings.reduce((total, next) => total + next.productsServicesRating, 0) / this.state.company.ratings.length) / 2) || 0}
+                            value={this.state.overallRatingNumber}
                             minimumValue={0}
                             maximumValue={10}
                             minimumTrackTintColor='#db2745'
@@ -105,12 +114,12 @@ class Company extends React.Component {
                 <View style={styles.sliderContainer}>
                     <View style={{flex: 1, flexDirection:'row', justifyContent:'center'}}>
                         <Text style={{margin: 10, color: '#7acc3b'}}>Eco:</Text>
-                        <Text style={{margin: 10, color: '#7acc3b'}}>{(this.state.company.ratings.reduce((total, next) => total + next.ecoRating, 0) / this.state.company.ratings.length) || 0 }</Text>
+                        <Text style={{margin: 10, color: '#7acc3b'}}>{this.state.ecoRatingNumber}</Text>
                     </View>
                     <View style={{flex: 1, alignItems: 'center'}}>
                         <Slider
                             style={{width: '90%', height: 10}}
-                            value={(this.state.company.ratings.reduce((total, next) => total + next.ecoRating, 0) / this.state.company.ratings.length) || 0}
+                            value={this.state.ecoRatingNumber}
                             minimumValue={0}
                             maximumValue={10}
                             step={1}
@@ -124,12 +133,12 @@ class Company extends React.Component {
                 <View style={styles.sliderContainer}>
                     <View style={{flex: 1, flexDirection:'row', justifyContent:'center'}}>
                         <Text style={{margin: 10, color: '#f04a1d'}}>Products / Services:</Text>
-                        <Text style={{margin: 10, color: '#f04a1d'}}>{(this.state.company.ratings.reduce((total, next) => total + next.productsServicesRating, 0) / this.state.company.ratings.length) || 0 }</Text>
+                        <Text style={{margin: 10, color: '#f04a1d'}}>{this.state.productsServicesRatingNumber}</Text>
                     </View>
                     <View style={{flex: 1, alignItems: 'center'}}>
                         <Slider
                             style={{width: '90%', height: 10}}
-                            value={(this.state.company.ratings.reduce((total, next) => total + next.productsServicesRating, 0) / this.state.company.ratings.length) || 0}
+                            value={this.state.productsServicesRatingNumber}
                             minimumValue={0}
                             maximumValue={10}
                             step={1}

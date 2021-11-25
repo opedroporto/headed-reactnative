@@ -8,8 +8,8 @@ import store from './redux/store'
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 
-import LoginNavigator from './LoginNavigator'
-import MainNavigator from './MainNavigator';
+import LoginNavigator from './navigators/LoginNavigator'
+import MainNavigator from './navigators/MainNavigator';
 
 const AppNavigatorStack = createStackNavigator()
 

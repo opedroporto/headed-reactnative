@@ -4,12 +4,13 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { connect } from 'react-redux'
 
-import Profile from './screens/Profile'
-import Home from './screens/Home'
-import Company from './screens/Company'
-import AddCompany from './screens/AddCompany'
+import Profile from '../screens/Profile'
+import Home from '../screens/Home'
+import Company from '../screens/Company'
+import AddCompany from '../screens/AddCompany'
+import Email from '../screens/Email'
+
 import LoginNavigator from './LoginNavigator';
-import Email from './screens/Email'
 
 const HomeStack = createStackNavigator()
 const MainDrawer = createDrawerNavigator()
@@ -46,13 +47,15 @@ class MainNavigator extends React.Component {
               <MainDrawer.Navigator
                 initialRouteName='HomeNavigator'
                 screenOptions={{
-                      headerStyle: {
-                      backgroundColor: '#db2745',
-                      height: 50
-                    },
-                    headerTintColor: '#fff',
-                    headerShadowVisible: false,
-                    unmountOnBlur: true,
+                  headerStyle: {
+                    backgroundColor: '#db2745',
+                    height: 50
+                  },
+                  headerTintColor: '#fff',
+                  headerShadowVisible: false,
+                  unmountOnBlur: true,
+                  drawerActiveBackgroundColor: '#f4bdc6',
+                  drawerActiveTintColor: '#db2745'
                 }}
               >
                 <MainDrawer.Screen name='ProfileScreen' component={Profile} options={{title: 'Your profile'}} />
@@ -60,6 +63,7 @@ class MainNavigator extends React.Component {
                   name='EmailScreen'
                   component={Email}
                   options={{
+                    title: 'Update e-mail',
                     drawerItemStyle: { height: 0 }
                   }}
                 />
@@ -76,6 +80,8 @@ class MainNavigator extends React.Component {
                     headerTintColor: '#fff',
                     headerShadowVisible: false,
                     unmountOnBlur: true,
+                    drawerActiveBackgroundColor: '#f4bdc6',
+                    drawerActiveTintColor: '#db2745'
                 }}
               >
                 <MainDrawer.Screen name='LoginNavigator' component={LoginNavigator} options={{title: 'Log in', headerShown: false}} />

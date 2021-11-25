@@ -19,6 +19,7 @@ class Home extends React.Component {
 
     renderItem = (obj) => {
         let numberOfLines = Math.floor(Dimensions.get('window').height / 325)
+        let ratingNumber = Math.round(((obj.item.ratings.reduce((total, next) => total + next.ecoRating, 0) / obj.item.ratings.length + obj.item.ratings.reduce((total, next) => total + next.productsServicesRating, 0) / obj.item.ratings.length) / 2) || 0).toFixed(2)
         return (
             <TouchableOpacity style={styles.card}
                 onPress={() => this.props.navigation.navigate('CompanyScreen', {company: obj.item})}
@@ -27,7 +28,7 @@ class Home extends React.Component {
                     <Image style={styles.image} source={{'uri': obj.item.image}}/>
                     <View style={styles.mainInfoContainer}>
                         <Text style={styles.mainInfoTitle} numberOfLines={1}>{ obj.item.name }</Text>
-                        <Text style={styles.mainInfoSubtitle}>{((obj.item.ratings.reduce((total, next) => total + next.ecoRating, 0) / obj.item.ratings.length + obj.item.ratings.reduce((total, next) => total + next.productsServicesRating, 0) / obj.item.ratings.length) / 2) || 0}/10 ✦</Text>
+                        <Text style={styles.mainInfoSubtitle}>{ ratingNumber }/10 ✦</Text>
                         <View style={styles.mainInfoDescriptionSection}>
                             <Text style={styles.mainInfoDescription} numberOfLines={numberOfLines}>{ obj.item.description }</Text>
                         </View>
@@ -147,5 +148,7 @@ const styles = StyleSheet.create({
     inputField: {
         width: '100%',
         padding: 5,
+        backgroundColor: 'white',
+        marginBottom: 2
     }
 })

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createStackNavigator } from '@react-navigation/stack'
 
 import LoginNavigator from './LoginNavigator'
-import MainNavigator from './MainNavigator';
+import MainNavigator from '.navigators/MainNavigator';
 
 const AppNavigatorStack = createStackNavigator()
 

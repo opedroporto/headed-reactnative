@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Button, Image, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native'
 import * as ImagePicker from 'expo-image-picker';
 
+
 import { connect  } from 'react-redux'
 import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -27,14 +28,13 @@ class AddCompany extends React.Component {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
+            base64: true,
             aspect: [5, 3],
             quality: 1,
         });
 
-        console.log(result);
-
         if (!result.cancelled) {
-            this.setState({image: result.uri});
+            this.setState({ image: `data:image/jpg;base64,${result.base64}` });
         }
     }
 

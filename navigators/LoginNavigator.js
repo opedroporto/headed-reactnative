@@ -3,9 +3,9 @@ import React from 'react';
 
 import { createStackNavigator } from '@react-navigation/stack'
 
-import Login from './screens/Login'
-import Signup from './screens/Signup'
-import Email from './screens/Email'
+import Login from '../screens/Login'
+import Signup from '../screens/Signup'
+import Email from '../screens/Email'
 
 const LoginStack = createStackNavigator()
 

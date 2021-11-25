@@ -220,8 +220,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end'
     },
     bottomEditContainer: {
-        flex: 1,
-        justifyContent: 'center'
+        flex: 1
     },
     editableContainer: {
         flexDirection: 'row',
