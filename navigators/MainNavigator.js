@@ -9,6 +9,7 @@ import Home from '../screens/Home'
 import Company from '../screens/Company'
 import AddCompany from '../screens/AddCompany'
 import Email from '../screens/Email'
+import About from '../screens/About'
 
 import LoginNavigator from './LoginNavigator';
 
@@ -68,6 +69,7 @@ class MainNavigator extends React.Component {
                   }}
                 />
                 <MainDrawer.Screen name='HomeNavigator' component={HomeNavigator} options={{title: 'Main companies'}} />
+                <MainDrawer.Screen name='AboutScreen' component={About} options={{title: 'About'}} />
               </MainDrawer.Navigator>
             ) : (
               <MainDrawer.Navigator
@@ -86,6 +88,7 @@ class MainNavigator extends React.Component {
               >
                 <MainDrawer.Screen name='LoginNavigator' component={LoginNavigator} options={{title: 'Log in', headerShown: false}} />
                 <MainDrawer.Screen name='HomeNavigator' component={HomeNavigator} options={{title: 'Main companies'}}/>
+                <MainDrawer.Screen name='AboutScreen' component={About} options={{title: 'About'}} />
               </MainDrawer.Navigator>
             )}
           </React.Fragment>

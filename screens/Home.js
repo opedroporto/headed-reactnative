@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { Dimensions, Image, Text, StyleSheet, View, SectionList, TextInput, TouchableOpacity } from 'react-native'
-import { fetchEntriesData } from '../backendApi.js'
+import { Icon } from 'react-native-elements'
 
 import { addEntry } from '../redux/actions'
 import { connect  } from 'react-redux'
+
+import { fetchEntriesData } from '../backendApi.js'
 
 class Home extends React.Component {
 
@@ -51,12 +53,23 @@ class Home extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <TextInput
-                    style={styles.inputField}
-                    placeholder='Search for companies...'
-                    value={this.state.searchInput}
-                    onChangeText={this.handleSearchInputUpdate}
-                />
+                <View style={styles.inputContainer}>
+                    <Icon
+                        style={styles.icon}
+                        name='magnifying-glass'  
+                        type='entypo'
+                        color='black'
+                        size={10}
+                        margin={1}
+                    />
+                    <TextInput
+                        style={styles.inputField}
+                        placeholder='Search for companies...'
+                        value={this.state.searchInput}
+                        onChangeText={this.handleSearchInputUpdate}
+                        multiline={true}
+                    />
+                </View>
                 <SectionList
                     renderItem={this.renderItem}
                     sections={[
@@ -146,9 +159,18 @@ const styles = StyleSheet.create({
         color: '#db2745',
     },
     inputField: {
+        flex: 1,
         width: '100%',
         padding: 5,
+        // textAlign: 'center',
+    },
+    inputContainer: {
+        flexDirection: 'row',
         backgroundColor: 'white',
         marginBottom: 2
+    },
+    icon: {
+        color: 'black',
+        padding: 15
     }
 })

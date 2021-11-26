@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     },
     errorMsg: {
         position: 'absolute',
-        top: 50,
+        top: 55,
         color: 'red'
     },
     icon: {

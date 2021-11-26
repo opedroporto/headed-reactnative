@@ -41,6 +41,10 @@ class Login extends React.Component {
             this.setState({err: errMessage})
         }
     }
+
+    _forgotPassword = () => {
+        this.props.navigation.navigate('RecoverPasswordScreen')
+    }
     
     handleUsernameUpdate = username => {
         /^[\x00-\x7F]*$/.test(username) &&
@@ -108,6 +112,7 @@ class Login extends React.Component {
                         <TouchableOpacity style={styles.loginButton} onPress={this._login}>
                             <Text style={styles.loginText}>Login</Text>
                         </TouchableOpacity>
+                        <Text style={styles.forgotPassword} onPress={this._forgotPassword}>Forgot password?</Text>
                         <View style={styles.bottomSection}>
                             <View style={styles.textContainer}>
                                 <Text>
@@ -224,7 +229,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row'  
     },
     loginButton: {
-        margin: 30,
+        margin: 20,
+        marginBottom: 15,
         padding: 10,
         backgroundColor: '#db2745',
         width: '100%',
@@ -249,5 +255,10 @@ const styles = StyleSheet.create({
     },
     textContainer: {
         margin: 5
+    },
+    forgotPassword: {
+        paddingLeft: 10,
+        alignSelf: 'flex-start',
+        color: '#db2745'
     }
 })

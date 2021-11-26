@@ -208,7 +208,62 @@ export const addCompany = async (token, company) => {
             'Authorization': `Bearer ${token}`,
             'Content-type': 'application/json'
         },
-        body: JSON.stringify({token, company})
+        body: JSON.stringify({company})
+    })
+
+    if(response.ok) {
+        const result = await response.text()
+        return result
+    }
+
+    const errMessage = await response.text()
+    throw new Error(errMessage)
+}
+
+export const sendRecoverPasswordCode = async (email, username) => {
+    const response = await fetch('https://headed-auth.herokuapp.com/sendRecoverPasswordCode', {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({email, username})
+    })
+
+    if(response.ok) {
+        const result = await response.text()
+        return result
+    }
+
+    const errMessage = await response.text()
+    throw new Error(errMessage)
+}
+
+export const verifyRecoverPasswordCode = async (email, code) => {
+    const response = await fetch('https://headed-auth.herokuapp.com/verifyRecoverPasswordCode', {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({email, code})
+    })
+
+    if(response.ok) {
+        const result = await response.json()
+        return result
+    }
+
+    const errMessage = await response.text()
+    throw new Error(errMessage)
+}
+
+export const resetPassword = async (token, username, password) => {
+    const response = await fetch('https://headed-auth.herokuapp.com/resetPassword', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({username, password})
     })
 
     if(response.ok) {

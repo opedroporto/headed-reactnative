@@ -21,8 +21,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/headed_logo.png",
+        "backgroundColor": "#db2745"
       },
       "package": "Headed.apk"
     },
