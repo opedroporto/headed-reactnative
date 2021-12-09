@@ -1,22 +1,110 @@
 import * as React from 'react'
-import { FlatList, Image, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, FlatList, Image, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Slider from '@react-native-community/slider';
+import Svg, {G, Circle, Text as SVG_Text} from 'react-native-svg'
+
 import { TextInput } from 'react-native-gesture-handler'
 import { connect } from 'react-redux'
 
 import { addComment, fetchEntrieComments, updateCompanyRatings, fetchUserRatings } from '../backendApi'
+
+const radius = 40
+const strokeWidth = 10
+const circleFontSize = 35
+
+const circumference = 2 * Math.PI * radius;
+const halfCircle = radius + strokeWidth;
+
+const CircleRating = (props) => {
+    return (
+        <View style={{margin: 5, alignItems: 'center', width: '23%'}}>
+            <Svg
+                width={radius * 2}
+                height={radius * 2}
+                viewBox={`0 0 ${halfCircle * 2} ${halfCircle * 2}`}
+            >
+                <SVG_Text
+                    fill={props.color}
+                    fontSize={circleFontSize}
+                    x={50}
+                    y={50 + (circleFontSize / 3)}
+                    textAnchor='middle'
+                >
+                    {props.value}
+                </SVG_Text>
+                <G
+                rotation="-90"
+                origin={`${halfCircle}, ${halfCircle}`}>
+                    <Circle
+                        cx='50%'
+                        cy='50%'
+                        stroke={props.color}
+                        strokeWidth={strokeWidth}
+                        r={radius}
+                        fill='transparent'
+                        strokeOpacity={0.2}
+                    />
+                    <Circle
+                        cx='50%'
+                        cy='50%'
+                        // stroke={props.color}
+                        strokeWidth={strokeWidth}
+                        r={radius}
+                        fill='transparent'
+                        stroke={props.color}
+                        strokeDasharray={circumference}
+                        strokeDashoffset={circumference - (circumference * props.value) / 10}
+                        strokeLinecap='square'
+                        />
+                </G>
+            </Svg>
+            <Text style={{fontSize: 16, textAlign: 'center', color: props.color}}>{props.title}</Text>
+        </View>
+    )
+}
+
+const SliderRating = (props) =>{
+    return (
+        <View style={styles.sliderContainer}>
+            <View style={{flex: 1, flexDirection:'row', justifyContent:'center'}}>
+                <Text style={{margin: 10, color: props.color}}>{props.title}:</Text>
+                <Text style={{margin: 10, color: props.color}}>{ props.value }</Text>
+            </View>
+            <View style={{flex: 1, alignItems: 'center'}}>
+                <Slider
+                    style={{width: '90%', height: 10}}
+                    value={props.value}
+                    onValueChange={props.handleSlideUpdate}
+                    minimumValue={0}
+                    maximumValue={10}
+                    step={1}
+                    minimumTrackTintColor={props.color}
+                    maximumTrackTintColor={props.color}
+                    thumbTintColor={props.color}
+                    disabled={props.disabled}
+                    />
+            </View> 
+        </View>
+    )
+}
 
 class Company extends React.Component {
     state = {
         company: this.props.route.params.company,
         comments: [],
         newComment: '',
-        slide1Value: 0,
-        slide2Value: 0,
-        overallRating: 0,
-        overallRatingNumber: 0,
+        
+        // comunnity ratings
         ecoRatingNumber: 0,
-        productsServicesRatingNumber: 0
+        productsServicesRatingNumber: 0,
+        attendanceRatingNumber: 0,
+        overallRatingNumber: 0,
+        
+        // user ratings
+        ecoRatingSlider: 0,
+        productsServicesSlider: 0,
+        attendanceSlider: 0,
+        overallRatingSlider: 0
     }
 
     componentDidMount = async () => {
@@ -30,27 +118,30 @@ class Company extends React.Component {
 
         // user ratings
         if (this.props.user.accessToken) {
-            const userRatings = await fetchUserRatings(this.props.user.accessToken, this.state.company._id)
-            this.setState({
-                slide1Value: userRatings.ecoRating,
-                slide2Value: userRatings.productsServicesRating,
-                overallRating: (userRatings.ecoRating + userRatings.productsServicesRating) / 2
-            })
+            try {
+                const userRatings = await fetchUserRatings(this.props.user.accessToken, this.state.company._id)
+                this.setState({
+                    ecoRatingSlider: userRatings.ecoRating,
+                    productsServicesSlider: userRatings.productsServicesRating,
+                    attendanceSlider: userRatings.attendanceRating,
+                    overallRatingSlider: Math.round((userRatings.ecoRating + userRatings.productsServicesRating + userRatings.attendanceRating) / 3)
+                })
+            } catch (e) {}
         }
 
+        // set community ratings
         this.setState({
-            overallRatingNumber: Math.round(((this.state.company.ratings.reduce((total, next) => total + next.ecoRating, 0) / this.state.company.ratings.length + this.state.company.ratings.reduce((total, next) => total + next.productsServicesRating, 0) / this.state.company.ratings.length) / 2) || 0),
             ecoRatingNumber: Math.round((this.state.company.ratings.reduce((total, next) => total + next.ecoRating, 0) / this.state.company.ratings.length) || 0),
-            productsServicesRatingNumber: Math.round((this.state.company.ratings.reduce((total, next) => total + next.productsServicesRating, 0) / this.state.company.ratings.length) || 0)
+            productsServicesRatingNumber: Math.round((this.state.company.ratings.reduce((total, next) => total + next.productsServicesRating, 0) / this.state.company.ratings.length) || 0),
+            attendanceRatingNumber: Math.round((this.state.company.ratings.reduce((total, next) => total + next.attendanceRating, 0) / this.state.company.ratings.length) || 0),
+            overallRatingNumber: Math.round(((this.state.company.ratings.reduce((total, next) => total + next.ecoRating, 0) / this.state.company.ratings.length + this.state.company.ratings.reduce((total, next) => total + next.productsServicesRating, 0) / this.state.company.ratings.length) / 2) || 0)
         })
-        
     }
 
     fetchComments = async () => {
         const comments = await fetchEntrieComments(this.props.user.accessToken, this.state.company._id)
         this.setState({ comments })
     }
-    
     
     addComment = async () => {
         await addComment(this.props.user.accessToken, this.state.newComment, this.state.company._id)
@@ -63,21 +154,27 @@ class Company extends React.Component {
         this.setState({ newComment })
     }
     
-    handleSlide1ValueUpdate = async (slide1Value) => {
-        await this.setState({ slide1Value })
+    handleEcoRatingValueUpdate = async (ecoRatingSlider) => {
+        await this.setState({ ecoRatingSlider })
         this._updateOverallRating()
     }
     
-    handleSlide2ValueUpdate = async (slide2Value) => {
-        await this.setState({ slide2Value })
+    handleProductsServicesRatingValueUpdate = async (productsServicesSlider) => {
+        await this.setState({ productsServicesSlider })
         this._updateOverallRating()
     }
     
+    handleAttendanceSliderValueUpdate = async (attendanceSlider) => {
+        await this.setState({ attendanceSlider })
+        this._updateOverallRating()
+    }
+
     _updateOverallRating = async () => {
-        this.setState({ overallRating: (this.state.slide1Value + this.state.slide2Value) / 2 })
+        this.setState({ overallRatingSlider: Math.round((this.state.ecoRatingSlider + this.state.productsServicesSlider + this.state.attendanceSlider) / 3) })
         const ratings = {
-            rating1: this.state.slide1Value,
-            rating2: this.state.slide2Value
+            rating1: this.state.ecoRatingSlider,
+            rating2: this.state.productsServicesSlider,
+            rating3: this.state.attendanceSlider,
         }
         await updateCompanyRatings(this.props.user.accessToken, this.state.company._id, ratings)
     }
@@ -91,63 +188,14 @@ class Company extends React.Component {
                 <Text style={styles.description}>{ this.state.company.description }</Text>
                 <View style={styles.divisor}/>
 
-                {/* average sliders */}
+        
+                {/* community average sliders */}
                 <Text style={styles.title}>Community ratings:</Text>
-                <View style={styles.sliderContainer}>
-                    <View style={{flex: 1, flexDirection:'row', justifyContent:'center'}}>
-                        <Text style={{margin: 10, color: '#db2745'}}>Overall rating:</Text>
-                        <Text style={{margin: 10, color: '#db2745'}}>{this.state.overallRatingNumber}</Text>
-                    </View>
-                    <View style={{flex: 1, alignItems: 'center'}}>
-                        <Slider
-                            style={{width: '90%', height: 10}}
-                            value={this.state.overallRatingNumber}
-                            minimumValue={0}
-                            maximumValue={10}
-                            minimumTrackTintColor='#db2745'
-                            maximumTrackTintColor='#db2745'
-                            thumbTintColor='#db2745'
-                            disabled
-                            />
-                    </View> 
-                </View>
-                <View style={styles.sliderContainer}>
-                    <View style={{flex: 1, flexDirection:'row', justifyContent:'center'}}>
-                        <Text style={{margin: 10, color: '#7acc3b'}}>Eco:</Text>
-                        <Text style={{margin: 10, color: '#7acc3b'}}>{this.state.ecoRatingNumber}</Text>
-                    </View>
-                    <View style={{flex: 1, alignItems: 'center'}}>
-                        <Slider
-                            style={{width: '90%', height: 10}}
-                            value={this.state.ecoRatingNumber}
-                            minimumValue={0}
-                            maximumValue={10}
-                            step={1}
-                            minimumTrackTintColor='#7acc3b'
-                            maximumTrackTintColor='#7acc3b'
-                            thumbTintColor='#7acc3b'
-                            disabled
-                            />
-                    </View>
-                </View>
-                <View style={styles.sliderContainer}>
-                    <View style={{flex: 1, flexDirection:'row', justifyContent:'center'}}>
-                        <Text style={{margin: 10, color: '#f04a1d'}}>Products / Services:</Text>
-                        <Text style={{margin: 10, color: '#f04a1d'}}>{this.state.productsServicesRatingNumber}</Text>
-                    </View>
-                    <View style={{flex: 1, alignItems: 'center'}}>
-                        <Slider
-                            style={{width: '90%', height: 10}}
-                            value={this.state.productsServicesRatingNumber}
-                            minimumValue={0}
-                            maximumValue={10}
-                            step={1}
-                            minimumTrackTintColor='#f04a1d'
-                            maximumTrackTintColor='#f04a1d'
-                            thumbTintColor='#f04a1d'
-                            disabled
-                            />
-                    </View>
+                <View style={styles.circleRatingsContainer}>
+                    <CircleRating color='#db2745' value={this.state.overallRatingNumber}  title='Overall rating'/>
+                    <CircleRating color='#f04a1d' value={this.state.productsServicesRatingNumber} title='Products/services'/>
+                    <CircleRating color='#349beb' value={this.state.attendanceRatingNumber} title='Attendance'/>
+                    <CircleRating color='#7acc3b' value={this.state.ecoRatingNumber} title='Eco'/>
                 </View>
 
                 <View style={styles.divisor}/>
@@ -156,62 +204,12 @@ class Company extends React.Component {
                 { this.props.user.accessToken &&
                     <React.Fragment>
                         <Text style={styles.title}>Your ratings:</Text>
-                        <View style={styles.sliderContainer}>
-                            <View style={{flex: 1, flexDirection:'row', justifyContent:'center'}}>
-                                <Text style={{margin: 10, color: '#db2745'}}>Overall rating:</Text>
-                                <Text style={{margin: 10, color: '#db2745'}}>{ this.state.overallRating }</Text>
-                            </View>
-                            <View style={{flex: 1, alignItems: 'center'}}>
-                                <Slider
-                                    style={{width: '90%', height: 10}}
-                                    value={this.state.overallRating}
-                                    minimumValue={0}
-                                    maximumValue={10}
-                                    minimumTrackTintColor='#db2745'
-                                    maximumTrackTintColor='#db2745'
-                                    thumbTintColor='#db2745'
-                                    disabled
-                                    />
-                            </View> 
-                        </View>
-                        <View style={styles.sliderContainer}>
-                            <View style={{flex: 1, flexDirection:'row', justifyContent:'center'}}>
-                                <Text style={{margin: 10, color: '#7acc3b'}}>Eco:</Text>
-                                <Text style={{margin: 10, color: '#7acc3b'}}>{ this.state.slide1Value }</Text>
-                            </View>
-                            <View style={{flex: 1, alignItems: 'center'}}>
-                                <Slider
-                                    style={{width: '90%', height: 10}}
-                                    value={this.state.slide1Value}
-                                    onValueChange={this.handleSlide1ValueUpdate}
-                                    minimumValue={0}
-                                    maximumValue={10}
-                                    step={1}
-                                    minimumTrackTintColor='#7acc3b'
-                                    maximumTrackTintColor='#7acc3b'
-                                    thumbTintColor='#7acc3b'
-                                    />
-                            </View>
-                        </View>
-                        <View style={styles.sliderContainer}>
-                            <View style={{flex: 1, flexDirection:'row', justifyContent:'center'}}>
-                                <Text style={{margin: 10, color: '#f04a1d'}}>Products / Services:</Text>
-                                <Text style={{margin: 10, color: '#f04a1d'}}>{ this.state.slide2Value }</Text>
-                            </View>
-                            <View style={{flex: 1, alignItems: 'center'}}>
-                                <Slider
-                                    style={{width: '90%', height: 10}}
-                                    value={this.state.slide2Value}
-                                    onValueChange={this.handleSlide2ValueUpdate}
-                                    minimumValue={0}
-                                    maximumValue={10}
-                                    step={1}
-                                    minimumTrackTintColor='#f04a1d'
-                                    maximumTrackTintColor='#f04a1d'
-                                    thumbTintColor='#f04a1d'
-                                    />
-                            </View>
-                        </View>
+                        <SliderRating color='#f04a1d' value={this.state.productsServicesSlider} handleSlideUpdate={this.handleProductsServicesRatingValueUpdate} title='Products/services'/>
+                        <SliderRating color='#349beb' value={this.state.attendanceSlider} handleSlideUpdate={this.handleAttendanceSliderValueUpdate} title='Attendance'/>
+                        <SliderRating color='#7acc3b' value={this.state.ecoRatingSlider} handleSlideUpdate={this.handleEcoRatingValueUpdate} title='Eco'/>
+
+                        <SliderRating color='#db2745' value={this.state.overallRatingSlider} title='Overall rating' disabled/>
+
                         <View style={styles.divisor}/>
                     </React.Fragment>
                 }
@@ -324,7 +322,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     commentTime: {
-        color: '#ccc'
+        color: '#aaa'
     },
     commentHeader: {
         flex: 1,
@@ -364,5 +362,10 @@ const styles = StyleSheet.create({
         color: '#db2745',
         fontWeight: 'bold',
         fontSize: 22
+    },
+    circleRatingsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 20
     }
 })

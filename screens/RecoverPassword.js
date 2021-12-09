@@ -12,10 +12,16 @@ export default class RecoverPassword extends React.Component {
         username: '',
         code: '',
         codeInput: false,
-        currentUsername: ''
+        currentUsername: '',
+        isLoading: false
     }
 
     _confirm = async () => {
+        // toggle loading state
+        this.setState({
+            isLoading: true,
+        })
+
         try {
             this.setState({emailSentMsg: '', successMsg: '', errorMsg: ''})
             const result = await sendRecoverPasswordCode(this.state.email, this.state.username)
@@ -25,9 +31,19 @@ export default class RecoverPassword extends React.Component {
             this.setState({errorMsg: errMessage, successMsg: '', emailSentMsg: ''})
             this.forceUpdate()
         }
+
+        // toggle loading state
+        this.setState({
+            isLoading: false,
+        })
     }
 
     _verifyCode = async () => {
+        // toggle loading state
+        this.setState({
+            isLoading: true,
+        })
+
         try {
             const { token } = await verifyRecoverPasswordCode(this.state.email, this.state.code)
             this.setState({emailSentMsg: 'Verified!', successMsg: '', errorMsg: '', codeInput: true})
@@ -37,6 +53,11 @@ export default class RecoverPassword extends React.Component {
             this.setState({errorMsg: errMessage, successMsg: '', emailSentMsg: ''})
             this.forceUpdate()
         }
+
+        //toggle loading state
+        this.setState({
+            isLoading: false,
+        })
     }
 
     handleEmailUpdate = email => {
@@ -101,25 +122,48 @@ export default class RecoverPassword extends React.Component {
                             />
                         </View>
                     </KeyboardAvoidingView>
-                    { this.state.codeInput  &&
-                    (<KeyboardAvoidingView style={styles.codeContainer} behavior='height'>
-                        <TextInput
-                            style={styles.codeInput}
-                            value={this.state.code}
-                            onChangeText={this.handleCodeUpdate}
-                            keyboardType='numeric'
-                            maxLength={6}
-                        />
-                        <TouchableOpacity style={styles.signupButton} onPress={this._verifyCode}>
-                            <Text style={styles.signupText}>Verify code</Text>
-                        </TouchableOpacity>
-                    </KeyboardAvoidingView>
+                    { this.state.codeInput  && (
+                        <KeyboardAvoidingView style={styles.codeContainer} behavior='height'>
+                            <TextInput
+                                style={styles.codeInput}
+                                value={this.state.code}
+                                onChangeText={this.handleCodeUpdate}
+                                keyboardType='numeric'
+                                maxLength={6}
+                            />
+                            { !this.state.isLoading? (
+                                <TouchableOpacity style={styles.signupButton} onPress={this._verifyCode}>
+                                    <Text style={styles.signupText}>Verify code</Text>
+                                </TouchableOpacity>
+                            ):(
+                                <TouchableOpacity style={[styles.signupButton, {backgroundColor: '#ccc'}]} onPress={this._verifyCode} disabled={true}>
+                                    <Text style={styles.signupText}>Verify code</Text>
+                                </TouchableOpacity>
+                            )}
+                        </KeyboardAvoidingView>
                     )}
-                    { !this.state.codeInput ?
-                    (<TouchableOpacity style={styles.signupButton} onPress={this._confirm}>
-                        <Text style={styles.signupText}>Confirm</Text>
-                    </TouchableOpacity>) :
-                    (<Text style={styles.clickableText} onPress={this._confirm}>Request code again</Text>)}
+                    { !this.state.codeInput ? (
+                        <React.Fragment>
+                            { !this.state.isLoading? (
+                                <TouchableOpacity style={styles.signupButton} onPress={this._confirm}>
+                                    <Text style={styles.signupText}>Confirm</Text>
+                                </TouchableOpacity>
+                            ):(
+                                <TouchableOpacity style={[styles.signupButton, {backgroundColor: '#ccc'}]} onPress={this._confirm} disabled={true}>
+                                    <Text style={styles.signupText}>Confirm</Text>
+                                </TouchableOpacity>
+                            )}
+                            
+                        </React.Fragment>
+                    ) : (
+                        <React.Fragment>
+                            { !this.state.isLoad? (
+                                <Text style={styles.clickableText} onPress={this._confirm}>Request code again</Text>
+                            ) : (
+                                <Text style={styles.clickableText} onPress={this._confirm}>Request code again</Text>
+                            )}
+                        </React.Fragment>
+                    )}
                 </LinearGradient>
             </ImageBackground>
         )

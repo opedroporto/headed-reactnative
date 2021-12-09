@@ -147,7 +147,7 @@ class Profile extends React.Component {
                                     autoCapitalize='none'
                                 />
                                 <Icon
-                                    style={styles.userIcon}
+                                    style={styles.pencilIcon}
                                     name='pencil'  
                                     type='font-awesome'
                                     color='white'
@@ -235,8 +235,12 @@ const styles = StyleSheet.create({
         color: 'white'
     },
     inputField: {
+        flex: 1,
+        flexWrap: 'wrap',
         fontSize: 22,
-        color: 'white'
+        color: 'white',
+        minWidth: '60%',
+        marginBottom: 10
     },
     errorMsg: {
         color: 'red',
@@ -263,4 +267,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: 'white'
     },
+    pencilIcon: {
+        marginTop: 15,
+        marginLeft: 5
+    }
 })

@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { Dimensions, Image, Text, StyleSheet, View, SectionList, TextInput, TouchableOpacity } from 'react-native'
+import { Dimensions, FlatList, Image, Text, StyleSheet, View, SectionList, TextInput, TouchableOpacity } from 'react-native'
 import { Icon } from 'react-native-elements'
 
-import { addEntry } from '../redux/actions'
+import { addEntry, searchEntries } from '../redux/actions'
 import { connect  } from 'react-redux'
 
 import { fetchEntriesData } from '../backendApi.js'
@@ -11,33 +11,42 @@ class Home extends React.Component {
 
     state = {
         searchInput: '',
-        entries: this.props.entries
+        entries: this.props.entries,
+        listRefreshing: false
     }
 
-    componentDidMount = async() => {
+    componentDidMount = () => {
+        this.fetchEntries()
+    }
+
+    fetchEntries = async() => {
+        await this.setState({listRefreshing: true})
         let entries = await fetchEntriesData(this.props.user.accessToken)
-        this.props.dispatch(addEntry(entries))
+        await this.props.dispatch(addEntry(entries))
+        await this.setState({listRefreshing: false})
     }
 
     renderItem = (obj) => {
-        let numberOfLines = Math.floor(Dimensions.get('window').height / 325)
-        let ratingNumber = Math.round(((obj.item.ratings.reduce((total, next) => total + next.ecoRating, 0) / obj.item.ratings.length + obj.item.ratings.reduce((total, next) => total + next.productsServicesRating, 0) / obj.item.ratings.length) / 2) || 0).toFixed(2)
-        return (
-            <TouchableOpacity style={styles.card}
-                onPress={() => this.props.navigation.navigate('CompanyScreen', {company: obj.item})}
-            >
-                <View style={styles.cardRow}>
-                    <Image style={styles.image} source={{'uri': obj.item.image}}/>
-                    <View style={styles.mainInfoContainer}>
-                        <Text style={styles.mainInfoTitle} numberOfLines={1}>{ obj.item.name }</Text>
-                        <Text style={styles.mainInfoSubtitle}>{ ratingNumber }/10 ✦</Text>
-                        <View style={styles.mainInfoDescriptionSection}>
-                            <Text style={styles.mainInfoDescription} numberOfLines={numberOfLines}>{ obj.item.description }</Text>
+        if (obj.item.visible) {
+            let numberOfLines = Math.floor(Dimensions.get('window').height / 325)
+            let ratingNumber = Math.round((obj.item.ratings.reduce((total, next) => total + next.ecoRating, 0) / obj.item.ratings.length + obj.item.ratings.reduce((total, next) => total + next.productsServicesRating, 0) / obj.item.ratings.length) / 2) || 0
+            return (
+                <TouchableOpacity style={styles.card}
+                    onPress={() => this.props.navigation.navigate('CompanyScreen', {company: obj.item})}
+                >
+                    <View style={styles.cardRow}>
+                        <Image style={styles.image} source={{'uri': obj.item.image}}/>
+                        <View style={styles.mainInfoContainer}>
+                            <Text style={styles.mainInfoTitle} numberOfLines={1}>{ obj.item.name }</Text>
+                            <Text style={styles.mainInfoSubtitle}>{ ratingNumber }/10 ✦</Text>
+                            <View style={styles.mainInfoDescriptionSection}>
+                                <Text style={styles.mainInfoDescription} numberOfLines={numberOfLines}>{ obj.item.description }</Text>
+                            </View>
                         </View>
                     </View>
-                </View>
-            </TouchableOpacity>
-        )
+                </TouchableOpacity>
+            )
+        }
     }
 
     handleSearchInputUpdate = searchInput => {
@@ -45,9 +54,7 @@ class Home extends React.Component {
         this.setState({ searchInput })
 
         // filter array
-        this.setState({
-            entries: this.props.entries.filter(entries => entries.name.toLowerCase().includes(searchInput.toLowerCase()))
-        })
+        this.props.dispatch(searchEntries(searchInput))
     }
 
     render() {
@@ -70,15 +77,19 @@ class Home extends React.Component {
                         multiline={true}
                     />
                 </View>
-                <SectionList
-                    renderItem={this.renderItem}
-                    sections={[
-                        {data: this.state.entries.sort(function(one, other) {
-                            return one.ratings.length < other.ratings.length
-                        })}
-                    ]}
-                    keyExtractor={(item, index) => item + index}
-                />
+                { this.props.entries &&
+                    <FlatList
+                        renderItem={this.renderItem}
+                        data={
+                            this.props.entries.sort(function(one, other) {
+                                return one.ratings.length < other.ratings.length
+                            })
+                        }
+                        keyExtractor={(item, index) => item + index}
+                        onRefresh={this.fetchEntries}
+                        refreshing={this.state.listRefreshing}
+                    />
+                }
                 { this.props.user.accessToken &&
                     <TouchableOpacity
                         onPress={() => this.props.navigation.navigate('AddCompanyScreen')}

@@ -10,7 +10,8 @@ class Email extends React.Component {
     state = {
         email: '',
         code: '',
-        codeInput: false
+        codeInput: false,
+        isLoading: false
     }
 
     componentDidMount = async () => {
@@ -24,6 +25,11 @@ class Email extends React.Component {
     }
 
     _confirmEmail = async () => {
+        // toggle loading state
+        this.setState({
+            isLoading: true,
+        })
+
         try {
             this.setState({emailSentMsg: '', successMsg: '', errorMsg: ''})
             const result = await addEmail(this.props.user.accessToken, this.state.email)
@@ -33,6 +39,11 @@ class Email extends React.Component {
             this.setState({errorMsg: errMessage, successMsg: '', emailSentMsg: ''})
             this.forceUpdate()
         }
+
+        // toggle loading state
+        this.setState({
+            isLoading: false,
+        })
     }
 
     _goHome = () => {
@@ -48,6 +59,11 @@ class Email extends React.Component {
     }
     
     _verifyCode = async () => {
+        // toggle loading state
+        this.setState({
+            isLoading: true,
+        })
+
         try {
             const result = await verifyCode(this.props.user.accessToken, this.state.email, this.state.code)
             this.setState({emailSentMsg: result, successMsg: '', errorMsg: '', codeInput: true})
@@ -57,6 +73,11 @@ class Email extends React.Component {
             this.setState({errorMsg: errMessage, successMsg: '', emailSentMsg: ''})
             this.forceUpdate()
         }
+
+        // toggle loading state
+        this.setState({
+            isLoading: false,
+        })
     }
 
     handleEmailUpdate = email => {
@@ -111,16 +132,38 @@ class Email extends React.Component {
                                 keyboardType='numeric'
                                 maxLength={6}
                             />
-                            <TouchableOpacity style={styles.signupButton} onPress={this._verifyCode}>
-                                <Text style={styles.signupText}>Verify code</Text>
-                            </TouchableOpacity>
+                            { !this.state.isLoading? (
+                                <TouchableOpacity style={styles.signupButton} onPress={this._verifyCode}>
+                                    <Text style={styles.signupText}>Verify code</Text>
+                                </TouchableOpacity>
+                            ) : (
+                                <TouchableOpacity style={[styles.signupButton, {backgroundColor: '#ccc'}]} onPress={this._verifyCode} disabled={true}>
+                                    <Text style={styles.signupText}>Verify code</Text>
+                                </TouchableOpacity>
+                            )}
                         </KeyboardAvoidingView>
                         )}
-                        { !this.state.codeInput ?
-                        (<TouchableOpacity style={styles.signupButton} onPress={this._confirmEmail}>
-                            <Text style={styles.signupText}>Confirm</Text>
-                        </TouchableOpacity>) :
-                        (<Text style={styles.clickableText} onPress={this._confirmEmail}>Request code again</Text>)}
+                        { !this.state.codeInput ? (
+                            <React.Fragment>
+                                { !this.state.isLoading? (
+                                    <TouchableOpacity style={styles.signupButton} onPress={this._confirmEmail}>
+                                        <Text style={styles.signupText}>Confirm</Text>
+                                    </TouchableOpacity>
+                                ) : (
+                                    <TouchableOpacity style={[styles.signupButton, {backgroundColor: '#ccc'}]} onPress={this._confirmEmail} disabled={true}>
+                                        <Text style={styles.signupText}>Confirm</Text>
+                                    </TouchableOpacity>
+                                )}
+                            </React.Fragment>
+                            ) : (
+                            <React.Fragment>
+                                { !this.state.isLoading? (
+                                    <Text style={styles.clickableText} onPress={this._confirmEmail}>Request code again</Text>
+                                ) : (
+                                    <Text style={styles.clickableText}>Request code again</Text>
+                                )}
+                            </React.Fragment>
+                        )}
                         <Text onPress={this._goHome} style={styles.clickableSkipText}>Skip</Text>
                     </View>
                 </View>

@@ -10,10 +10,16 @@ import { signup, fetchUserData } from '../backendApi.js'
 class Signup extends React.Component {
     state = {
         username: '',
-        password: ''
+        password: '',
+        isLoading: false
     }
 
     _signup = async () => {
+        // toggle loading state
+        this.setState({
+            isLoading: true,
+        })
+        
         try {
             // sign up user
             const { accessToken } = await signup(this.state.username,  this.state.password)
@@ -24,7 +30,6 @@ class Signup extends React.Component {
                 accessToken
             }
             this.props.dispatch(addUser(user))
-            
             // navigate to email screen
             this.props.navigation.reset({
                 index: 0,
@@ -41,6 +46,11 @@ class Signup extends React.Component {
             const errMessage = err.message
             this.setState({err: errMessage})
         }
+
+        // toggle loading state
+        this.setState({
+            isLoading: false,
+        })
     }
 
     handleUsernameUpdate = username => {
@@ -100,9 +110,15 @@ class Signup extends React.Component {
                                 />
                             </View>
                         </KeyboardAvoidingView>
-                        <TouchableOpacity style={styles.signupButton} onPress={this._signup}>
-                            <Text style={styles.signupText}>Sign up</Text>
-                        </TouchableOpacity>
+                        { !this.state.isLoading? (
+                            <TouchableOpacity style={styles.signupButton} onPress={this._signup}>
+                                <Text style={styles.signupText}>Sign up</Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity style={[styles.signupButton, {backgroundColor: '#ccc'}]} onPress={this._signup} disabled={true}>
+                                <Text style={styles.signupText}>Sign up</Text>
+                            </TouchableOpacity>
+                        )}
                         <View style={styles.bottomSection}>
                             <Text>
                                 Already have an account?  <Text style={styles.clickableText} onPress={() => this.props.navigation.push('LoginScreen')}>Login</Text>

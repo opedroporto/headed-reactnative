@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button, Image, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native'
+import { Alert, Image, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native'
 import * as ImagePicker from 'expo-image-picker';
 
 
@@ -13,13 +13,14 @@ class AddCompany extends React.Component {
     state = {
         image: false,
         name: '',
-        description: ''
+        description: '',
+        isLoading: false
     }
 
     componentDidMount = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-            alert('Sorry, we need camera roll permissions to make this work!');
+            Alert.alert('Sorry!', 'Camera roll permissions are needed to make this work.');
             this.props.navigation.goBack()
         }
     }
@@ -39,6 +40,11 @@ class AddCompany extends React.Component {
     }
 
     _addCompany =  async () => {
+        // toggle loading state
+        this.setState({
+            isLoading: true,
+        })
+
         try {
             const company = {
                 image: this.state.image,
@@ -51,6 +57,11 @@ class AddCompany extends React.Component {
             const errMessage = err.message
             this.setState({err: errMessage})
         }
+
+        // toggle loading state
+        this.setState({
+            isLoading: false,
+        })
     }
 
     _handleNameUpdate = name => {
@@ -96,9 +107,15 @@ class AddCompany extends React.Component {
                     </KeyboardAvoidingView>
                     <Text style={styles.errorMsg}>{this.state.err}</Text>
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.addCompanyButton} onPress={this._addCompany}>
-                            <Text style={styles.addCompany}>Add Company</Text>
-                        </TouchableOpacity>
+                        { !this.state.isLoading? (
+                            <TouchableOpacity style={styles.addCompanyButton} onPress={this._addCompany}>
+                                <Text style={styles.addCompany}>Add Company</Text>
+                            </TouchableOpacity>
+                        ):(
+                            <TouchableOpacity style={[styles.addCompanyButton, {backgroundColor: '#ccc'}]} onPress={this._addCompany} disabled={true}>
+                                <Text style={styles.addCompany}>Add Company</Text>
+                            </TouchableOpacity>
+                        )}
                     </View>
             </ScrollView>
         )
