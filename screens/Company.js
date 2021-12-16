@@ -104,7 +104,8 @@ class Company extends React.Component {
         ecoRatingSlider: 0,
         productsServicesSlider: 0,
         attendanceSlider: 0,
-        overallRatingSlider: 0
+        overallRatingSlider: 0,
+        isLoading: false
     }
 
     componentDidMount = async () => {
@@ -144,9 +145,19 @@ class Company extends React.Component {
     }
     
     addComment = async () => {
+        // toggle loading state
+        this.setState({
+            isLoading: true,
+        })
+
         await addComment(this.props.user.accessToken, this.state.newComment, this.state.company._id)
         this.setState({ newComment: '' })
         this.fetchComments()
+
+        // toggle loading state
+        this.setState({
+            isLoading: false,
+        })
     }
     
     handleNewCommentUpdate = newComment => {
@@ -222,9 +233,15 @@ class Company extends React.Component {
                             value={this.state.newComment}
                             onChangeText={this.handleNewCommentUpdate}
                             />
-                        <TouchableOpacity style={styles.addCommentButton} onPress={this.addComment}>
-                            <Text style={styles.addCommentTitle}>Comment</Text>
-                        </TouchableOpacity>
+                        { !this.state.isLoading ? (
+                            <TouchableOpacity style={styles.addCommentButton} onPress={this.addComment}>
+                                <Text style={styles.addCommentTitle}>Comment</Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity style={[styles.addCommentButton, {backgroundColor: '#ccc'}]} onPress={this._login} disabled={true}>
+                                <Text style={styles.addCommentTitle}>Comment</Text>
+                            </TouchableOpacity>
+                        )}
                     </KeyboardAvoidingView>
                 }
             </View>
