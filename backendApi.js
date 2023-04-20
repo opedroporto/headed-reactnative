@@ -1,5 +1,5 @@
 export const login = async (username, password) => {
-    const response = await fetch('https://cs50m-authserver.onrender.com/login', {
+    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/login', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
@@ -22,7 +22,7 @@ export const login = async (username, password) => {
 }
 
 export const signup = async (username, password) => {
-    const response = await fetch('https://cs50m-authserver.onrender.com/signup', {
+    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/signup', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
@@ -45,7 +45,7 @@ export const signup = async (username, password) => {
 }
 
 export const fetchUserData = async (token) => {
-    const response = await fetch('https://cs50m-server.onrender.com/fetchUserData', {
+    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/fetchUserData', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -63,7 +63,7 @@ export const fetchUserData = async (token) => {
 }
 
 export const fetchEntriesData = async (token) => {
-    const response = await fetch('https://cs50m-server.onrender.com/fetchEntriesData', {
+    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/fetchEntriesData', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -84,7 +84,7 @@ export const fetchEntriesData = async (token) => {
 }
 
 export const fetchEntrieComments = async (token, companyID) => {
-    const response = await fetch('https://cs50m-server.onrender.com/fetchEntrieComments', {
+    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/fetchEntrieComments', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -106,7 +106,7 @@ export const fetchEntrieComments = async (token, companyID) => {
 }
 
 export const editProfile = async (token, userData) => {
-    const response = await fetch('https://cs50m-server.onrender.com/editProfile', {
+    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/editProfile', {
         method: 'PUT',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -129,7 +129,7 @@ export const editProfile = async (token, userData) => {
 }
 
 export const addComment = async (token, newComment, companyID) => {
-    const response = await fetch('https://cs50m-server.onrender.com/addComment', {
+    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/addComment', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -151,7 +151,7 @@ export const addComment = async (token, newComment, companyID) => {
 }
 
 export const addEmail = async (token, email) => {
-    const response = await fetch('https://cs50m-server.onrender.com/addEmail', {
+    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/addEmail', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -174,7 +174,7 @@ export const addEmail = async (token, email) => {
 }
 
 export const verifyCode = async(token, email, code) => {
-    const response = await fetch('https://cs50m-server.onrender.com/verifyCode', {
+    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/verifyCode', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -197,7 +197,7 @@ export const verifyCode = async(token, email, code) => {
 }
 
 export const updateCompanyRatings = async(token, companyID, ratings) => {
-    const response = await fetch('https://cs50m-server.onrender.com/updateCompanyRatings', {
+    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/updateCompanyRatings', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -220,7 +220,7 @@ export const updateCompanyRatings = async(token, companyID, ratings) => {
 }
 
 export const fetchUserRatings = async(token, companyID) => {
-    const response = await fetch('https://cs50m-server.onrender.com/fetchUserRatings', {
+    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/fetchUserRatings', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -243,7 +243,7 @@ export const fetchUserRatings = async(token, companyID) => {
 }
 
 export const addCompany = async (token, company) => {
-    const response = await fetch('https://cs50m-server.onrender.com/addCompany', {
+    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/addCompany', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -266,7 +266,7 @@ export const addCompany = async (token, company) => {
 }
 
 export const sendRecoverPasswordCode = async (email, username) => {
-    const response = await fetch('https://cs50m-authserver.onrender.com/sendRecoverPasswordCode', {
+    const response = await fetch('https://cs50m-authserver.vercel.app/sendRecoverPasswordCode', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
@@ -288,7 +288,7 @@ export const sendRecoverPasswordCode = async (email, username) => {
 }
 
 export const verifyRecoverPasswordCode = async (email, code) => {
-    const response = await fetch('https://cs50m-authserver.onrender.com/verifyRecoverPasswordCode', {
+    const response = await fetch('https://cs50m-authserver.vercel.app/verifyRecoverPasswordCode', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
@@ -310,7 +310,7 @@ export const verifyRecoverPasswordCode = async (email, code) => {
 }
 
 export const resetPassword = async (token, username, password) => {
-    const response = await fetch('https://cs50m-authserver.onrender.com/resetPassword', {
+    const response = await fetch('https://cs50m-authserver.vercel.app/resetPassword', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
