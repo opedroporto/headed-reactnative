@@ -4,19 +4,6 @@
   "description": "",
   "main": "index.js",
   "type": "module",
-  "builds": [
-    {
-      "src": "./index.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    
-    {
-      "src": "/(.*)",
-      "dest": "/"
-    }
-  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index"
