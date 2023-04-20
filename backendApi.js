@@ -1,5 +1,5 @@
 export const login = async (username, password) => {
-    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/login', {
+    const response = await fetch('https://headed.cyclic.app/login', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
@@ -22,7 +22,7 @@ export const login = async (username, password) => {
 }
 
 export const signup = async (username, password) => {
-    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/signup', {
+    const response = await fetch('https://headed.cyclic.app/signup', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
@@ -45,7 +45,7 @@ export const signup = async (username, password) => {
 }
 
 export const fetchUserData = async (token) => {
-    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/fetchUserData', {
+    const response = await fetch('https://headed.cyclic.app/fetchUserData', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -63,7 +63,7 @@ export const fetchUserData = async (token) => {
 }
 
 export const fetchEntriesData = async (token) => {
-    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/fetchEntriesData', {
+    const response = await fetch('https://headed.cyclic.app/fetchEntriesData', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -84,7 +84,7 @@ export const fetchEntriesData = async (token) => {
 }
 
 export const fetchEntrieComments = async (token, companyID) => {
-    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/fetchEntrieComments', {
+    const response = await fetch('https://headed.cyclic.app/fetchEntrieComments', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -106,7 +106,7 @@ export const fetchEntrieComments = async (token, companyID) => {
 }
 
 export const editProfile = async (token, userData) => {
-    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/editProfile', {
+    const response = await fetch('https://headed.cyclic.app/editProfile', {
         method: 'PUT',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -129,7 +129,7 @@ export const editProfile = async (token, userData) => {
 }
 
 export const addComment = async (token, newComment, companyID) => {
-    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/addComment', {
+    const response = await fetch('https://headed.cyclic.app/addComment', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -151,7 +151,7 @@ export const addComment = async (token, newComment, companyID) => {
 }
 
 export const addEmail = async (token, email) => {
-    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/addEmail', {
+    const response = await fetch('https://headed.cyclic.app/addEmail', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -174,7 +174,7 @@ export const addEmail = async (token, email) => {
 }
 
 export const verifyCode = async(token, email, code) => {
-    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/verifyCode', {
+    const response = await fetch('https://headed.cyclic.app/verifyCode', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -197,7 +197,7 @@ export const verifyCode = async(token, email, code) => {
 }
 
 export const updateCompanyRatings = async(token, companyID, ratings) => {
-    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/updateCompanyRatings', {
+    const response = await fetch('https://headed.cyclic.app/updateCompanyRatings', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -220,7 +220,7 @@ export const updateCompanyRatings = async(token, companyID, ratings) => {
 }
 
 export const fetchUserRatings = async(token, companyID) => {
-    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/fetchUserRatings', {
+    const response = await fetch('https://headed.cyclic.app/fetchUserRatings', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -243,7 +243,7 @@ export const fetchUserRatings = async(token, companyID) => {
 }
 
 export const addCompany = async (token, company) => {
-    const response = await fetch('https://orange-red-lamb-sari.cyclic.app/addCompany', {
+    const response = await fetch('https://headed.cyclic.app/addCompany', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
