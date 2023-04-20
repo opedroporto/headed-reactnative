@@ -17,7 +17,7 @@ export default class About extends React.Component {
                     <View style={styles.subInfoContainer}>
                         <Text style={styles.title}>About</Text>
                         <Text style={styles.text}>
-                            The Headed peoject is a mobile application that relies on people will of building a better
+                            The Headed project is a mobile application that relies on people will of building a better
                             community with better companies and the provision of better products and services for every
                             individual. By this private initiative of creating this simple rating system where people
                             can express themselves and let everyone know the many aspects of a company, we hope we can
@@ -33,7 +33,7 @@ export default class About extends React.Component {
                                 style={styles.clickableText}
                                 onPress={() => Linking.openURL('https://cs50.harvard.edu/mobile/2018')}
                             > CS50’s Mobile App Development with React Native </Text>
-                            , and the credit and aknowledgment goes to the whole cs50 team and everyone that helped make it happen,
+                            , and the credit and aknowledgment goes to the whole CS50 team and everyone that helped make it happen,
                             in particular to Jordan Hayashi, the course's teacher.
                         </Text>
                     </View>

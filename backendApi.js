@@ -12,7 +12,11 @@ export const login = async (username, password) => {
         const result = await response.json()
         return result
     }
-
+    
+    const errStatus = await response.status
+    if (errStatus  === 503) {
+        throw new Error("Erro ao fazer login")
+    }
     const errMessage = await response.text()
     throw new Error(errMessage)
 }
@@ -31,6 +35,11 @@ export const signup = async (username, password) => {
         return result
     }
 
+    const errStatus = await response.status
+    if (errStatus  === 503) {
+        throw new Error("Erro ao criar conta")
+        
+    }
     const errMessage = await response.text()
     throw new Error(errMessage)
 }
@@ -66,6 +75,10 @@ export const fetchEntriesData = async (token) => {
         return result
     }
 
+    const errStatus = await response.status
+    if (errStatus  === 503) {
+        throw new Error("Erro ao carregar")
+    }
     const errMessage = await response.text()
     throw new Error(errMessage)
 }
@@ -84,6 +97,10 @@ export const fetchEntrieComments = async (token, companyID) => {
         return result
     }
 
+    const errStatus = await response.status
+    if (errStatus  === 503) {
+        throw new Error("Erro ao carregar")
+    }
     const errMessage = await response.text()
     throw new Error(errMessage)
 }
@@ -103,6 +120,10 @@ export const editProfile = async (token, userData) => {
         return result
     }
 
+    const errStatus = await response.status
+    if (errStatus  === 503) {
+        throw new Error("Erro ao editar perfil")
+    }
     const errMessage = await response.text()
     throw new Error(errMessage)
 }
@@ -121,6 +142,10 @@ export const addComment = async (token, newComment, companyID) => {
         return true
     }
 
+    const errStatus = await response.status
+    if (errStatus  === 503) {
+        throw new Error("Erro ao adicionar comentário")
+    }
     const errMessage = await response.text()
     throw new Error(errMessage)
 }
@@ -140,6 +165,10 @@ export const addEmail = async (token, email) => {
         return result
     }
 
+    const errStatus = await response.status
+    if (errStatus  === 503) {
+        throw new Error("Erro ao adicionar e-mail")
+    }
     const errMessage = await response.text()
     throw new Error(errMessage)
 }
@@ -159,6 +188,10 @@ export const verifyCode = async(token, email, code) => {
         return result
     }
 
+    const errStatus = await response.status
+    if (errStatus  === 503) {
+        throw new Error("Erro ao verificar código")
+    }
     const errMessage = await response.text()
     throw new Error(errMessage)
 }
@@ -178,6 +211,10 @@ export const updateCompanyRatings = async(token, companyID, ratings) => {
         return result
     }
 
+    const errStatus = await response.status
+    if (errStatus  === 503) {   
+        throw new Error("Erro ao atualizar")
+    }
     const errMessage = await response.text()
     throw new Error(errMessage)
 }
@@ -197,6 +234,10 @@ export const fetchUserRatings = async(token, companyID) => {
         return result
     }
 
+    const errStatus = await response.status
+    if (errStatus  === 503) {
+        throw new Error("Erro ao carregar")
+    }
     const errMessage = await response.text()
     throw new Error(errMessage)
 }
@@ -216,6 +257,10 @@ export const addCompany = async (token, company) => {
         return result
     }
 
+    const errStatus = await response.status
+    if (errStatus  === 503) {
+        throw new Error("Erro ao adicionar")
+    }
     const errMessage = await response.text()
     throw new Error(errMessage)
 }
@@ -234,6 +279,10 @@ export const sendRecoverPasswordCode = async (email, username) => {
         return result
     }
 
+    const errStatus = await response.status
+    if (errStatus  === 503) {
+        throw new Error("Erro ao enviar")
+    }
     const errMessage = await response.text()
     throw new Error(errMessage)
 }
@@ -252,6 +301,10 @@ export const verifyRecoverPasswordCode = async (email, code) => {
         return result
     }
 
+    const errStatus = await response.status
+    if (errStatus  === 503) {
+        throw new Error("Erro ao verificar")
+    }
     const errMessage = await response.text()
     throw new Error(errMessage)
 }
@@ -271,6 +324,10 @@ export const resetPassword = async (token, username, password) => {
         return result
     }
 
+    const errStatus = await response.status
+    if (errStatus  === 503) {
+        throw new Error("Erro ao resetar")
+    }
     const errMessage = await response.text()
     throw new Error(errMessage)
 }

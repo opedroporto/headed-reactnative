@@ -133,16 +133,18 @@ class Login extends React.Component {
                                 </View>
                                 
                             </KeyboardAvoidingView>
-                            { !this.state.isLoading? (
-                                <TouchableOpacity style={styles.loginButton} onPress={this._login}>
-                                    <Text style={styles.loginText}>Login</Text>
-                                </TouchableOpacity>
-                            ) : (
-                                <TouchableOpacity style={[styles.loginButton, {backgroundColor: '#ccc'}]} onPress={this._login} disabled={true}>
-                                    <Text style={styles.loginText}>Login</Text>
-                                </TouchableOpacity>
-                            )}
-                            <Text style={styles.forgotPassword} onPress={this._forgotPassword}>Forgot password?</Text>
+                            <View style={styles.loginDiv}>
+                                { !this.state.isLoading? (
+                                    <TouchableOpacity style={styles.loginButton} onPress={this._login}>
+                                        <Text style={styles.loginText}>Login</Text>
+                                    </TouchableOpacity>
+                                ) : (
+                                    <TouchableOpacity style={[styles.loginButton, {backgroundColor: '#ccc'}]} onPress={this._login} disabled={true}>
+                                        <Text style={styles.loginText}>Login</Text>
+                                    </TouchableOpacity>
+                                )}
+                                <Text style={styles.forgotPassword} onPress={this._forgotPassword}>Forgot password?</Text>
+                            </View>
                             <View style={styles.bottomSection}>
                                 <View style={styles.textContainer}>
                                     <Text>
@@ -277,11 +279,14 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row'  
     },
-    loginButton: {
-        margin: 20,
-        marginBottom: 15,
+    loginDiv: {
         padding: 10,
+        width: '100%',
+        alignItems: 'center',
+    },
+    loginButton: {
         backgroundColor: '#db2745',
+        height: 40,
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
@@ -303,7 +308,7 @@ const styles = StyleSheet.create({
         color: '#888'
     },
     textContainer: {
-        margin: 5
+        margin: 2
     },
     forgotPassword: {
         paddingLeft: 10,
