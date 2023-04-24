@@ -266,7 +266,7 @@ export const addCompany = async (token, company) => {
 }
 
 export const sendRecoverPasswordCode = async (email, username) => {
-    const response = await fetch('https://cs50m-authserver.vercel.app/sendRecoverPasswordCode', {
+    const response = await fetch('https://headed.cyclic.app/sendRecoverPasswordCode', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
@@ -288,7 +288,7 @@ export const sendRecoverPasswordCode = async (email, username) => {
 }
 
 export const verifyRecoverPasswordCode = async (email, code) => {
-    const response = await fetch('https://cs50m-authserver.vercel.app/verifyRecoverPasswordCode', {
+    const response = await fetch('https://headed.cyclic.app/verifyRecoverPasswordCode', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
@@ -310,7 +310,7 @@ export const verifyRecoverPasswordCode = async (email, code) => {
 }
 
 export const resetPassword = async (token, username, password) => {
-    const response = await fetch('https://cs50m-authserver.vercel.app/resetPassword', {
+    const response = await fetch('https://headed.cyclic.app/resetPassword', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
